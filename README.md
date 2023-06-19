@@ -1,4 +1,4 @@
-<!--* Soy Eric Grau, aprendiz de programador Full-Stack Web Developer en el curso CodeSpace en Málaga.
+<!-- * Soy Eric Grau, aprendiz de programador Full-Stack Web Developer en el curso CodeSpace en Málaga.
 
 <!--* Entre los diferentes lenguajes de programación, frameworks y tecnologías a usar, he decidido escoger Javascript, React, MongoDB y Node.js -->
 
@@ -30,3 +30,4 @@
 - npm install mongoose
 - npm i --save-dev nodemon
 - node app.js (activar el servidor dependiendo del puerto en /env)
+- npm install express mongodb mongoose body-parser ()
