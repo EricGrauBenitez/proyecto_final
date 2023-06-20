@@ -30,4 +30,6 @@
 - npm install mongoose
 - npm i --save-dev nodemon
 - node app.js (activar el servidor dependiendo del puerto en /env)
-- npm install express mongodb mongoose body-parser ()
+- npm install express mongodb mongoose body-parser
+- npm install --save mongoose-unique-validator
+- npm install ramda

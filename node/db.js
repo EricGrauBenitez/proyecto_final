@@ -1,9 +1,17 @@
 const mongoose = require('mongoose');
 
-const dbURI = 'mongodb://localhost:27017/proyecto_final';
+const dbURI = 'mongodb://127.0.0.1:27017/proyecto_final';
 
-mongoose.connect(dbURI, { useNewUrlParser: true, useUnifiedTopology: true })
-  .then(() => console.log('Conexión exitosa a MongoDB'))
-  .catch(err => console.error('Error al conectar a MongoDB', err));
+const connectDB = async () => {
+  try {
+    await mongoose.connect(dbURI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log('Conexión exitosa a MongoDB');
+  } catch (error) {
+    console.error('Error al conectar a MongoDB', error);
+  }
+};
 
-module.exports = mongoose.connection;
+module.exports = connectDB;

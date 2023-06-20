@@ -2,13 +2,13 @@ const express = require('express');
 const app = express();
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const userRoutes = require('./routes/users');
-
+const usersRoutes = require('./routes/users');
+const connectDB = require('./db');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use('/users', userRoutes);
+app.use('/users', usersRoutes);
 
 
 // Iniciar el servidor
@@ -30,4 +30,6 @@ app.get('/saludo', (req, res) => {
   res.send('¡Hola desde la ruta /saludo!');
 });
 
+// ! Base de datos
 
+connectDB();
