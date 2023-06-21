@@ -22,14 +22,12 @@ app.listen(3000, () => {
 
 //? Rutas
 app.get('/', (req, res) => {
-  res.send('¡Hola, mundo!');
+  res.send('<h1>¡Hola, mundo!</h1>');
 });
 
-
-app.get('/saludo', (req, res) => {
-  res.send('¡Hola desde la ruta /saludo!');
-});
-
+// app.get('/users', (req, res) => {
+//   res.send('<h1>¡Hola, usuarios!</h1><button>Crear usuario</button>');
+//   });
 // ! Base de datos
 
 connectDB();

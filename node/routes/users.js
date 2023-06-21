@@ -1,23 +1,21 @@
 const express = require('express');
 const router = express.Router();
+const UserController = require('../controllers/UserController');
 const User = require('../models/User');
 
-router.post('/registro', async (req, res) => {
-  try {
-    const { nombre, email, contraseña } = req.body;
+// Ruta para crear un usuario
+router.post('/', UserController.createUser);
 
-    const newUser = new User({
-      nombre,
-      email,
-      contraseña
-    });
+// Ruta para obtener todos los usuarios
+router.get('/', UserController.getAllUsers);
 
-    await newUser.save();
+// Ruta para obtener un usuario por su ID
+router.get('/:id', UserController.getUserById);
 
-    res.status(201).json({ mensaje: 'Usuario registrado exitosamente' });
-  } catch (error) {
-    res.status(500).json({ mensaje: 'Error al registrar el usuario' });
-  }
-});
+// Ruta para actualizar un usuario
+router.put('/:id', UserController.updateUser);
+
+// Ruta para eliminar un usuario
+router.delete('/:id', UserController.deleteUser);
 
 module.exports = router;
