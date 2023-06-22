@@ -23,13 +23,21 @@
 
 <!--?   Para instalar Node.js y dependencias como express, nodemon y mongoose  -->
 
-- mkdir mi-proyecto
-- cd mi-proyecto
+NODE.js
+
 - npm init
 - npm install express
 - npm install mongoose
-- npm i --save-dev nodemon
+- npm i --save-dev nodemon / nodemon app.js (activar servidor y cambios sin reiniciarlo)
 - node app.js (activar el servidor dependiendo del puerto en /env)
 - npm install express mongodb mongoose body-parser
 - npm install --save mongoose-unique-validator
 - npm install ramda
+- npm install cors
+- npm install bcrypt
+- npm install jsonwebtoken
+
+REACT.js
+
+- npx create-react-app proyecto_final_react
+- npm start (servidor React)

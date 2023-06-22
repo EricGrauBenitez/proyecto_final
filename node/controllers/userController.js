@@ -1,15 +1,27 @@
 const User = require('../models/User');
+const bcrypt = require('bcrypt');
+
 
 const userController = {
   // Crear un usuario
   createUser: async (req, res) => {
     try {
-      const { nombre, email, contraseña } = req.body;
+      const { nombre, email, contraseña, rol } = req.body;
+
+      // Validar la contraseña
+    // if (contraseña.length < 8) {
+    //   return res.status(400).json({ mensaje: 'La contraseña debe tener al menos 8 caracteres' });
+    // }
+
+    // Generar el hash de la contraseña
+    const hashedContraseña = await bcrypt.hash(contraseña, 10);
+
 
       const newUser = new User({
         nombre,
         email,
-        contraseña
+        contraseña: hashedContraseña,
+        rol: 'usuario'
       });
 
       await newUser.save();
@@ -48,10 +60,22 @@ const userController = {
   updateUser: async (req, res) => {
     try {
       const { id } = req.params;
-      const { nombre, email, contraseña } = req.body;
+      const { nombre, email, contraseña, rol } = req.body;
+
+      // Validar la contraseña
+    if (contraseña && contraseña.length < 8) {
+      return res.status(400).json({ mensaje: 'La contraseña debe tener al menos 8 caracteres' });
+    }
+
+    // Generar el hash de la nueva contraseña (si se proporciona)
+    let hashedContraseña;
+    if (contraseña) {
+      hashedContraseña = await bcrypt.hash(contraseña, 10);
+    }
+
       const updatedUser = await User.findByIdAndUpdate(
         id,
-        { nombre, email, contraseña },
+        { nombre, email, contraseña: hashedContraseña, rol },
         { new: true }
       );
       if (!updatedUser) {
