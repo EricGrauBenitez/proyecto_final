@@ -6,6 +6,7 @@ const cors = require('cors');
 const usersRoutes = require('./routes/users');
 const connectDB = require('./db');
 const loginRouter = require('./routes/login');
+const { completarTexto, getRespuestaGenerada } = require('./api-chatgpt/api');
 require('dotenv').config();
 
 
@@ -19,6 +20,21 @@ app.use(bodyParser.json());
 
 app.use('/login', loginRouter);
 app.use('/users', usersRoutes);
+
+app.use(express.json());
+
+app.post('/chat', async (req, res) => {
+  const { mensaje } = req.body;
+
+   // Utiliza la función completarTexto para obtener la respuesta del Chat-GPT
+   await completarTexto(mensaje);
+
+   // Obtén la respuesta generada por el modelo
+   const respuesta = getRespuestaGenerada();
+ 
+   // Envía la respuesta como respuesta al cliente
+   res.json({ respuesta });
+ });
 
 
 // Iniciar el servidor

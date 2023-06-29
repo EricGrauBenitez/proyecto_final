@@ -36,8 +36,10 @@ NODE.js
 - npm install cors
 - npm install bcrypt
 - npm install jsonwebtoken
+- npm install openai
 
 REACT.js
 
 - npx create-react-app proyecto_final_react
 - npm start (servidor React)
+- npm install axios
