@@ -8,17 +8,17 @@ require('dotenv').config();
 // Ruta para inicio de sesión
 router.post('/', async (req, res) => {
   try {
-    const { email, contraseña } = req.body;
+    const { email, password } = req.body;
 
     // Verificar las credenciales del usuario en la base de datos
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ mensaje: 'Credenciales inválidas' });
+      return res.status(401).json({ mensaje: 'Invalid credentials' });
     }
 
-    const contraseñaValida = await bcrypt.compare(contraseña, user.contraseña);
-    if (!contraseñaValida) {
-      return res.status(401).json({ mensaje: 'Credenciales inválidas' });
+    const passwordValidated = await bcrypt.compare(password, user.password);
+    if (!passwordValidated) {
+      return res.status(401).json({ mensaje: 'Invalid credentials' });
     }
 
     // Generar un token JWT válido

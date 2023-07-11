@@ -3,14 +3,14 @@ import axios from 'axios';
 
 const Login = () => {
   const [email, setEmail] = useState('');
-  const [contraseña, setContraseña] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
 
-  const handleContraseñaChange = (e) => {
-    setContraseña(e.target.value);
+  const handlePasswordChange = (e) => {
+    setPassword(e.target.value);
   };
 
   const handleSubmit = async (e) => {
@@ -19,7 +19,7 @@ const Login = () => {
     try {
       const response = await axios.post('http://localhost:8000/login', {
         email,
-        contraseña: contraseña,
+        password: password,
       });
 
       // Manejar la respuesta del servidor, por ejemplo, guardar el token en el estado o en localStorage.
@@ -28,7 +28,7 @@ const Login = () => {
 
       // Restablecer los campos del formulario
       setEmail('');
-      setContraseña('');
+      setPassword('');
     } catch (error) {
       console.error(error);
     }
@@ -43,16 +43,16 @@ const Login = () => {
           <input 
           type="email" 
           value={email} 
-          placeholder="Correo electrónico"
+          placeholder="email"
           onChange={(e) => setEmail(e.target.value)}
            required />
         </div>
         <div>
-          <label>Contraseña:</label>
+          <label>Password:</label>
           <input 
           type="password" 
-          value={contraseña} 
-          onChange={(e) => setContraseña(e.target.value)}
+          value={password} 
+          onChange={(e) => setPassword(e.target.value)}
           required />
         </div>
         <button type="submit">Iniciar sesión</button>

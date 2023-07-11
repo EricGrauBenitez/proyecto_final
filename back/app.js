@@ -6,9 +6,10 @@ const cors = require('cors');
 const usersRoutes = require('./routes/users');
 const connectDB = require('./db');
 const loginRouter = require('./routes/login');
-const { completarTexto, getRespuestaGenerada } = require('./api-chatgpt/api');
+const chatRoutes = require('./routes/chat');
 require('dotenv').config();
 
+app.use(express.json());
 
 app.use(cors({
   origin: 'http://localhost:3000',
@@ -18,23 +19,31 @@ app.use(cors({
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use('/login', loginRouter);
+// ? Rutas
+app.get('/', (req, res) => {
+  res.send('<h1>¡Hola, mundo!</h1>');
+});
 app.use('/users', usersRoutes);
+// app.use('/login', loginRouter); 
+app.post('/login', (req, res) => {
+  const { email, password } = req.body;
 
-app.use(express.json());
+  // Aquí debes implementar la lógica para verificar las credenciales del usuario
+  // y generar un token de autenticación si son válidas
+  if (email === 'user@example.com' && password === 'password') {
+    // Generar un token de autenticación
+    const token = '...'; // Generar el token de autenticación utilizando una biblioteca como JSON Web Tokens (JWT)
 
-app.post('/chat', async (req, res) => {
-  const { mensaje } = req.body;
+    // Devolver el token al frontend
+    return res.status(200).json({ token });
+  }
 
-   // Utiliza la función completarTexto para obtener la respuesta del Chat-GPT
-   await completarTexto(mensaje);
+  // Si las credenciales no son válidas, devolver un mensaje de error
+  return res.status(401).json({ error: 'Credenciales inválidas' });
+});
 
-   // Obtén la respuesta generada por el modelo
-   const respuesta = getRespuestaGenerada();
- 
-   // Envía la respuesta como respuesta al cliente
-   res.json({ respuesta });
- });
+app.use('/api/v1', chatRoutes);
+
 
 
 // Iniciar el servidor
@@ -46,14 +55,6 @@ app.listen(8000, () => {
 //   console.log(`Servidor en funcionamiento en el puerto ${PORT}`);
 // });
 
-//? Rutas
-app.get('/', (req, res) => {
-  res.send('<h1>¡Hola, mundo!</h1>');
-});
-
-app.get('/users', (req, res) => {
-  res.send('<h1>¡Hola, usuarios!</h1><button>Crear usuario</button>');
-  });
 
 
 // ! Base de datos
