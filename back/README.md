@@ -13,3 +13,13 @@ POST a http://localhost:8000/login
 Recibirás un token
 
 GET a http://localhost:8000/users insertando el token recibido anteriormente en el auth.
+
+---
+
+POST a http://localhost:8000/chat
+con estructura JSON:
+{
+"userId": "64a82ca1aed18ca9c757cc60",
+"question":"hola",
+"answer":"bien"
+}

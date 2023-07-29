@@ -20,11 +20,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // ? Rutas
-app.get('/', (req, res) => {
-  res.send('<h1>¡Hola, mundo!</h1>');
-});
+// app.get('/', (req, res) => {
+//   res.send('<h1>¡Hola, mundo!</h1>');
+// });
 app.use('/users', usersRoutes);
-// app.use('/login', loginRouter); 
+app.use('/chat', chatRoutes);
+app.use('/login', loginRouter); 
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
 
@@ -43,7 +44,7 @@ app.post('/login', (req, res) => {
 });
 
 app.use('/api/v1', chatRoutes);
-
+app.post('/chat', chatRoutes);
 
 
 // Iniciar el servidor

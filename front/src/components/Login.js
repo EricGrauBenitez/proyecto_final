@@ -1,6 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+// Configurar el interceptor de axios
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+});
+
+
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -22,6 +34,11 @@ const Login = () => {
         password: password,
       });
 
+      const token = response.data.token;
+
+      // Almacenar el token en el local storage
+      localStorage.setItem('token', token);
+  
       // Manejar la respuesta del servidor, por ejemplo, guardar el token en el estado o en localStorage.
 
       console.log(response.data); // Respuesta del servidor
