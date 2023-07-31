@@ -1,0 +1,44 @@
+/* Home.css */
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    /* Agregamos flexbox para centrar verticalmente los elementos */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Esto establece la altura del contenedor para ocupar toda la pantalla verticalmente */
+  }
+  
+  h1 {
+    color: #c7c7c7;
+    font-size: 36px;
+  }
+  
+  p {
+    color: #cecdcd;
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+  
+  .link-container {
+    /* Agregamos flexbox para centrar horizontalmente los botones */
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  .link {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 5px;
+  }
+  
+  .link:hover {
+    background-color: #0056b3;
+  }
+  

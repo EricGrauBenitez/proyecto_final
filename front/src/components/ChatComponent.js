@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import './ChatComponent.css'; 
 
 const ChatComponent = () => {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [chatMessages, setChatMessages] = useState([]);
-  const userId = '64a82c8eaed18ca9c757cc5e'; // Prueba con un usuario
-  const chatId = '64c52062df23c7ffdd578529';
+  const userId = '64a82cd4aed18ca9c757cc64'; // Prueba con un usuario
+  const chatId = '64c639d72ee7c7e65f9ba1a3';
   
 
   useEffect(() => {
@@ -23,14 +24,31 @@ const ChatComponent = () => {
 
   const getChatMessages = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/chat/64a82c8eaed18ca9c757cc5e');
+      const response = await axios.get(`http://localhost:8000/chat/${userId}`);
       setChatMessages(response.data);
     } catch (error) {
       console.error('Error al obtener la conversación:', error);
     }
   };
 
+  const saveConversationToDB = async (question, answer) => {
+    try {
+      await axios.post('http://localhost:8000/chat', {
+        user: userId,
+        conversation: [
+          {question, answer}]});
+      // Luego de guardar en la base de datos, actualizamos el estado de chatMessages
+      setChatMessages([
+        ...chatMessages,
+        {user: userId, conversation: [
+            { question, answer }]}]);
+    } catch (error) {
+      console.error('Error al guardar la conversación en la base de datos:', error);
+    }
+  };
+  
   const sendQuestion = async () => {
+    console.log('Valor de question:', question);
     try {
       const response = await fetch('http://localhost:4000/api/v1/gpt', {
         method: 'POST',
@@ -41,45 +59,45 @@ const ChatComponent = () => {
         },
         body: JSON.stringify({ query: question })
       });
-
+  
       if (response.ok) {
         const answer = await response.text();
         setAnswer(answer);
-        // Llamar a la función para guardar la conversación en la base de datos
-        saveConversationToDB(question, answer);
+  
+        // Verificar si hay un chat existente para actualizar
+        const existingChat = chatMessages.find((chat) => chat.user === userId);
+        if (existingChat) {
+          // Si hay un chat existente, hacer una solicitud PUT para actualizarlo
+          const chatId = existingChat._id; // Obtener el ID del chat existente
+          await axios.put(`http://localhost:8000/chat/${chatId}`, {
+            question,
+            answer
+          });
+        } else {
+          // Si no hay un chat existente, hacer una solicitud POST para crear uno nuevo
+          await axios.post('http://localhost:8000/chat', {
+            user: userId,
+            conversation: [{
+              question,
+              answer
+            }]
+          });
+        }
+  
+        // Actualizar el estado de chatMessages con la nueva conversación
+        getChatMessages();
+  
+        // Limpiar el input de pregunta después de enviarla
         setQuestion('');
-      
       } else {
         console.error('Error en la solicitud:', response.status);
       }
     } catch (error) {
       console.error('Error en la solicitud:', error);
     }
-  };
+  }; 
 
-  const saveConversationToDB = async (question, answer) => {
-    try {
-      await axios.post('http://localhost:8000/chat', {
-        user: userId,
-        conversation: [{
-          question,
-          answer
-        }]
-      });
-  
-      // Luego de guardar en la base de datos, actualizamos el estado de chatMessages
-    setChatMessages([...chatMessages, { 
-      user: userId,
-      conversation: [{
-        question,
-        answer
-      }]
-    }]);
-  } catch (error) {
-    console.error('Error al guardar la conversación en la base de datos:', error);
-  }
-};
-const updateChat = async () => {
+  const updateChat = async () => {
   try {
     const response = await axios.put(`http://localhost:8000/chat/${chatId}`, {
       question,
@@ -107,37 +125,47 @@ const updateChat = async () => {
 };
 
   const clearChat = async () => {
-    try {
-      await axios.delete(`http://localhost:8000/chat/${userId}`);
-      setChatMessages([]);
+  try {
+    await axios.delete(`http://localhost:8000/chat/${chatId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+    setChatMessages([]);
     } catch (error) {
       console.error('Error al borrar la conversación:', error);
     }
   };
 
-  return (
-    <div>
+   return (
+    <div className="container">
     <h1>Chat GPT</h1>
     <div className="chat-messages">
-    {/* Mostrar todas las conversaciones en chatMessages */}
-    {chatMessages.map((chat, index) => (
-      <div key={index} className="chat-message">
-        {chat.conversation.map((message, i) => (
-          <div key={i}>
-            <p>Pregunta: {message.question}</p>
-            <p>Respuesta: {message.answer}</p>
-          </div>
-        ))}
-      </div>
-    ))}
-  </div>
-    <input type="text" placeholder="Nueva pregunta" value={question} onChange={handleQuestionChange} />
-    <input type="text" placeholder="Nueva respuesta" value={answer} onChange={handleAnswerChange} />
-    <button onClick={sendQuestion}>Enviar</button>
-    <button onClick={clearChat}>Borrar Conversación</button>
-    <button onClick={updateChat}>Actualizar Chat</button>
-  </div>
-);
+      {/* Mostrar todas las conversaciones en chatMessages */}
+      {chatMessages.map((chat, index) => (
+        <div key={index} className="chat-message">
+          {chat.conversation.map((message, i) => (
+            <div key={i} className="message-bubble">
+            <div className="question">
+            <p>Human</p>
+              <p>{message.question}</p>
+              </div>
+              {message.answer && (
+                <div className="answer">
+                  <p> &#129302 :</p>
+                  <p>{message.answer}</p>
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      ))}
+    </div>
+      <input type="text" placeholder="Nueva pregunta" value={question} onChange={handleQuestionChange} />
+      <button onClick={sendQuestion}>Enviar</button>
+      <button onClick={clearChat}>Borrar Conversación</button>
+    </div>
+  );
 };
 
 export default ChatComponent;

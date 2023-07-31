@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import './RegisterForm.css';
 
 const RegisterForm = () => {
   const [name, setName] = useState('');
@@ -30,9 +31,9 @@ const RegisterForm = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <h2>Register</h2>
-      <form onSubmit={handleSubmit}>
+      <form   onSubmit={handleSubmit}>
         <div>
           <label htmlFor="name">Name:</label>
           <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} />

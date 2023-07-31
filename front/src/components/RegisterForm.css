@@ -1,0 +1,29 @@
+/* RegisterForm.css */
+h2 {
+    color: aliceblue;
+}
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh; 
+    border: none;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    max-width: 200px; 
+    padding: 40px; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+  }
+  
+  label {
+    font-weight: bold;
+    color: aliceblue;
+  }
+  

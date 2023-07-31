@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
+import './RegisterForm.css'; 
 // Configurar el interceptor de axios
 axios.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
@@ -52,7 +52,7 @@ const Login = () => {
   };
 
   return (
-    <div>
+    <div className="container">
       <h2>Iniciar sesión</h2>
       <form onSubmit={handleSubmit}>
         <div>

@@ -1,0 +1,88 @@
+/* ChatComponent.css */
+
+/* Estilo para el contenedor principal del chat */
+body {
+  background-color: #212121; /* Cambia este valor al color de fondo que desees */
+}
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+}
+
+/* Estilo para el encabezado del chat */
+h1 {
+  text-align: center;
+  color: #f9f9f9;
+}
+
+/* Estilo para los mensajes del chat */
+.chat-message {
+  margin-bottom: 10px;
+}
+
+/* Estilo para las preguntas */
+.question {
+  text-align: right;
+  color: #000000; /* Color del texto para las preguntas */
+  border-radius: 20px 20px 0 20px; /* Ajustar bordes para hacerlo más redondito */
+  padding: 10px; /* Aumentar espaciado */
+  margin-left: auto; /* Alinear a la izquierda */
+  background-color: #ca8e8e;
+  align-self: flex-start;
+}
+
+/* Estilo para las respuestas */
+.answer {
+  text-align: left;
+  color: #fff; /* Color del texto para las respuestas */
+  border-radius: 20px 20px 20px 0; /* Ajustar bordes para hacerlo más redondito */
+  padding: 10px; /* Aumentar espaciado */
+  margin-right: auto; /* Alinear a la derecha */
+  background-color: #28415d;
+  align-self: flex-end;
+}
+
+/* Estilo para la sección de preguntas y respuestas */
+.input-section {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+}
+
+/* Estilo para los campos de entrada */
+input {
+  flex: 1;
+  padding: 8px;
+  margin-right: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+/* Estilo para los botones */
+button {
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  background-color: #6e89a5;
+  color: #fff;
+  cursor: pointer;
+}
+
+/* Estilo para el botón de "Borrar Conversación" */
+.clear-button {
+  background-color: #dc3545;
+  margin-left: 10px;
+}
+
+/* Estilo para los bocadillos de mensaje */
+.message-bubble {
+  padding: 8px;
+  border-radius: 20px; /* Hacerlo más redondito */
+  margin: 5px;
+  max-width: 70%;
+}
+
