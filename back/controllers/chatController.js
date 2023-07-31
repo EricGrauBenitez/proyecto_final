@@ -3,20 +3,19 @@ const User = require('../models/User');
 
 // Controlador para guardar el chat
 exports.saveChat = async (req, res) => {
-  const { userId, question, answer } = req.body;
+  const { userId, conversation } = req.body;
 
   try {
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
-
+console.log(conversation);
     const chat = new Chat({
-      user: user._id,
-      question,
-      answer
+      userId: user._id,
+      conversation
     });
-
+    console.log(chat)
     await chat.save();
     res.status(201).json({ message: 'Chat guardado exitosamente' });
   } catch (error) {
@@ -35,7 +34,7 @@ exports.getUserChats = async (req, res) => {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
-    const chats = await Chat.find({ user: user._id });
+    const chats = await Chat.find({ userId: user._id });
     res.status(200).json(chats);
   } catch (error) {
     console.error(error);
@@ -64,15 +63,16 @@ exports.deleteChat = async (req, res) => {
 // Controlador para actualizar un chat específico
 exports.updateChat = async (req, res) => {
   const { chatId } = req.params;
-  const { question, answer } = req.body;
-
+  const { conversation } = req.body;
+  
   try {
     const chat = await Chat.findById(chatId);
     if (!chat) {
       return res.status(404).json({ error: 'Chat no encontrado' });
     }
 
-    chat.conversation.push({ question, answer });
+    const currentConversation = chat.conversation;
+    chat.conversation = [...currentConversation, ...conversation]
     await chat.save();
 
     res.status(200).json({ message: 'Chat actualizado exitosamente' });

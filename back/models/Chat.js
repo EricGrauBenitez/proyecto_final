@@ -6,7 +6,7 @@ const conversationSchema = new mongoose.Schema({
 });
 
 const chatSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+  userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
   conversation: [conversationSchema],
   createdAt: { type: Date, default: Date.now },
 });

@@ -6,8 +6,8 @@ const ChatComponent = () => {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [chatMessages, setChatMessages] = useState([]);
-  const userId = '64a82cd4aed18ca9c757cc64'; // Prueba con un usuario
-  const chatId = '64c639d72ee7c7e65f9ba1a3';
+  const userId = '64c787b38f00c453efb785a5'; // Prueba con un usuario
+  const chatId = '64c7884d8f00c453efb785a8';
   
 
   useEffect(() => {
@@ -34,13 +34,13 @@ const ChatComponent = () => {
   const saveConversationToDB = async (question, answer) => {
     try {
       await axios.post('http://localhost:8000/chat', {
-        user: userId,
+        userId,
         conversation: [
           {question, answer}]});
       // Luego de guardar en la base de datos, actualizamos el estado de chatMessages
       setChatMessages([
         ...chatMessages,
-        {user: userId, conversation: [
+        {userId, conversation: [
             { question, answer }]}]);
     } catch (error) {
       console.error('Error al guardar la conversación en la base de datos:', error);
@@ -48,7 +48,6 @@ const ChatComponent = () => {
   };
   
   const sendQuestion = async () => {
-    console.log('Valor de question:', question);
     try {
       const response = await fetch('http://localhost:4000/api/v1/gpt', {
         method: 'POST',
@@ -65,18 +64,21 @@ const ChatComponent = () => {
         setAnswer(answer);
   
         // Verificar si hay un chat existente para actualizar
-        const existingChat = chatMessages.find((chat) => chat.user === userId);
+        const existingChat = chatMessages.find((chat) => chat.userId === userId);
+        console.log(existingChat);
+        console.log(chatMessages);
         if (existingChat) {
           // Si hay un chat existente, hacer una solicitud PUT para actualizarlo
           const chatId = existingChat._id; // Obtener el ID del chat existente
           await axios.put(`http://localhost:8000/chat/${chatId}`, {
-            question,
-            answer
+            conversation: 
+            [{question,
+            answer}]
           });
         } else {
           // Si no hay un chat existente, hacer una solicitud POST para crear uno nuevo
           await axios.post('http://localhost:8000/chat', {
-            user: userId,
+            userId,
             conversation: [{
               question,
               answer
@@ -107,7 +109,7 @@ const ChatComponent = () => {
     if (response.status === 200) {
       // Actualizar el estado de chatMessages con la conversación actualizada
       const updatedChat = {
-        user: userId,
+        userId,
         conversation: [{
           question,
           answer
