@@ -24,6 +24,14 @@ const userController = {
         role: 'user'
       });
 
+    // check if user already exist
+    // Validate if user exist in our database
+    const oldUser = await User.findOne({ email });
+
+    if (oldUser) {
+      return res.status(409).send("User Already Exist. Please Login");
+    }
+
       await newUser.save();
 
       res.status(201).json({ mensaje: 'Usuario registrado exitosamente' });
@@ -44,6 +52,7 @@ const userController = {
 
   // Obtener un usuario por su ID
   getUserById: async (req, res) => {
+    
     try {
       const { id } = req.params;
       const user = await User.findById(id);

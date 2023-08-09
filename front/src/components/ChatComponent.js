@@ -1,14 +1,47 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import axios from 'axios';
 import './ChatComponent.css'; 
+import { logout } from '../features/userSlice';
+import { useDispatch } from 'react-redux';
 
 const ChatComponent = () => {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
-  const [chatMessages, setChatMessages] = useState([]);
+  const [chatMessages, setChatMessages] = useState(null);
+  const [conversation, setConversation] = useState([]);
+
+
   const userId = '64c787b38f00c453efb785a5'; // Prueba con un usuario
-  const chatId = '64c7884d8f00c453efb785a8';
+  const chatId = '64c7c71065cdaf3c21ce98c5';
+  const dispatch = useDispatch();
+  // const [chatId, setChatId] = useState(null);
+  // const [userId, setUserId] = useState(null);
   
+  // useEffect(() => {
+  //   // Iniciar un nuevo chat y obtener el chatId
+  //   axios.post('http://localhost:8000/chat', { userId, conversation: [] })
+  //     .then(response => {
+  //       setChatId(response.data.chatId);
+  //     })
+  //     .catch(error => {
+  //       // Manejar el error
+  //       console.error('Error al iniciar el chat:', error);
+  //     });
+  // }, []);
+
+  // useEffect(() => {
+  //   // Obtener el userId desde el backend
+  //   axios.get('http://localhost:8000/users') // Aquí debes proporcionar el userId del usuario actual
+  //     .then(response => {
+  //       setUserId(response.data.userId);
+  //       // Puedes también guardar los chats obtenidos si los necesitas
+  //       // const chats = response.data.chats;
+  //     })
+  //     .catch(error => {
+  //       // Manejar el error
+  //       console.error('Error al obtener el userId:', error);
+  //     });
+  // }, []);
 
   useEffect(() => {
     // Obtener la conversación inicial al cargar el componente
@@ -18,34 +51,35 @@ const ChatComponent = () => {
   const handleQuestionChange = (e) => {
     setQuestion(e.target.value);
   };
-  const handleAnswerChange = (e) => {
-    setAnswer(e.target.value);
-  };
+  // const handleAnswerChange = (e) => {
+  //   setAnswer(e.target.value);
+  // };
 
   const getChatMessages = async () => {
     try {
-      const response = await axios.get(`http://localhost:8000/chat/${userId}`);
-      setChatMessages(response.data);
+      const { data } = await axios.get(`http://localhost:8000/chat/${userId}`);
+      setChatMessages(data);
+      setConversation(data[0].conversation)
     } catch (error) {
       console.error('Error al obtener la conversación:', error);
     }
   };
 
-  const saveConversationToDB = async (question, answer) => {
-    try {
-      await axios.post('http://localhost:8000/chat', {
-        userId,
-        conversation: [
-          {question, answer}]});
-      // Luego de guardar en la base de datos, actualizamos el estado de chatMessages
-      setChatMessages([
-        ...chatMessages,
-        {userId, conversation: [
-            { question, answer }]}]);
-    } catch (error) {
-      console.error('Error al guardar la conversación en la base de datos:', error);
-    }
-  };
+  // const saveConversationToDB = async (question, answer) => {
+  //   try {
+  //     await axios.post('http://localhost:8000/chat', {
+  //       userId,
+  //       conversation: [
+  //         {question, answer}]});
+  //     // Luego de guardar en la base de datos, actualizamos el estado de chatMessages
+  //     setChatMessages([
+  //       ...chatMessages,
+  //       {userId, conversation: [
+  //           { question, answer }]}]);
+  //   } catch (error) {
+  //     console.error('Error al guardar la conversación en la base de datos:', error);
+  //   }
+  // };
   
   const sendQuestion = async () => {
     try {
@@ -99,32 +133,32 @@ const ChatComponent = () => {
     }
   }; 
 
-  const updateChat = async () => {
-  try {
-    const response = await axios.put(`http://localhost:8000/chat/${chatId}`, {
-      question,
-      answer
-    });
+//   const updateChat = async () => {
+//   try {
+//     const response = await axios.put(`http://localhost:8000/chat/${chatId}`, {
+//       question,
+//       answer
+//     });
 
-    if (response.status === 200) {
-      // Actualizar el estado de chatMessages con la conversación actualizada
-      const updatedChat = {
-        userId,
-        conversation: [{
-          question,
-          answer
-        }]
-      };
-      setChatMessages([...chatMessages, updatedChat]);
-      setQuestion('');
-      setAnswer('');
-    } else {
-      console.error('Error en la solicitud:', response.status);
-    }
-  } catch (error) {
-    console.error('Error en la solicitud:', error);
-  }
-};
+//     if (response.status === 200) {
+//       // Actualizar el estado de chatMessages con la conversación actualizada
+//       const updatedChat = {
+//         userId,
+//         conversation: [{
+//           question,
+//           answer
+//         }]
+//       };
+//       setChatMessages([...chatMessages, updatedChat]);
+//       setQuestion('');
+//       setAnswer('');
+//     } else {
+//       console.error('Error en la solicitud:', response.status);
+//     }
+//   } catch (error) {
+//     console.error('Error en la solicitud:', error);
+//   }
+// };
 
   const clearChat = async () => {
   try {
@@ -133,39 +167,79 @@ const ChatComponent = () => {
         'Content-Type': 'application/json',
       },
     });
-    setChatMessages([]);
+    setConversation([]);
     } catch (error) {
       console.error('Error al borrar la conversación:', error);
     }
   };
 
+  /*
+
+  chatMessages = [
+    {
+      question: "",
+      answer: "",
+    },
+    
+      question: "",
+      answer: "",
+    },
+    
+      question: "",
+      answer: "",
+    },
+    
+      question: "",
+      answer: "",
+    },
+  ]
+
+  chatMessages = [
+    {
+      userId: "",
+      conversation: [
+        {
+          question: "",
+          answer: ""
+        }
+      ]
+    }
+  ]
+
+  */
+
    return (
     <div className="container">
     <h1>Chat GPT</h1>
+    <section className="chat-wrapper">
     <div className="chat-messages">
       {/* Mostrar todas las conversaciones en chatMessages */}
-      {chatMessages.map((chat, index) => (
-        <div key={index} className="chat-message">
-          {chat.conversation.map((message, i) => (
+        <div className="chat-message">
+          {conversation && conversation.map(({question, answer}, i) => (
             <div key={i} className="message-bubble">
-            <div className="question">
+            <div className="question message-wrapper">
             <p>Human</p>
-              <p>{message.question}</p>
+              <p>{question}</p>
               </div>
-              {message.answer && (
-                <div className="answer">
+              {answer && (
+                <div className="answer message-wrapper">
                   <p> &#129302 :</p>
-                  <p>{message.answer}</p>
+                  <p>{answer}</p>
                 </div>
               )}
             </div>
           ))}
         </div>
-      ))}
     </div>
-      <input type="text" placeholder="Nueva pregunta" value={question} onChange={handleQuestionChange} />
-      <button onClick={sendQuestion}>Enviar</button>
-      <button onClick={clearChat}>Borrar Conversación</button>
+    </section>
+    <footer className="chat-footer">
+      <textarea type="text" placeholder="Nueva pregunta" value={question} onChange={handleQuestionChange} />
+      <div className="chat-footer-buttons">
+        <button onClick={sendQuestion}>Enviar</button>
+        <button onClick={clearChat}>Borrar Conversación</button>
+        <button onClick={() => dispatch(logout())}>Logout</button>
+      </div>
+    </footer>
     </div>
   );
 };

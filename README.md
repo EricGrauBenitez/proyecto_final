@@ -23,7 +23,7 @@
 
 <!--?   Para instalar Node.js y dependencias como express, nodemon y mongoose  -->
 
-NODE.js
+<!--* NODE.js
 
 - npm init
 - npm install express
@@ -42,4 +42,8 @@ REACT.js
 
 - npx create-react-app proyecto_final_react
 - npm start (servidor React)
-- npm install axios
+- npm install axios -->
+
+Para poder ejecutar este proyecto, necesitarás Node.js y React.
+Se trata de un chatbot con la api de Chat GPT, de OpenAI.
+Se diferencian 3 carpetas, una con el frontend (front) , otra con el backend (back) y otra con la lógica y gestión de la api (openai-api).

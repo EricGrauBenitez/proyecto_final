@@ -1,10 +1,11 @@
 import './App.css';
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import ChatComponent from './components/ChatComponent';
 import UsersPage from './pages/UsersPage';
 import RegisterForm from './components/RegisterForm';
+import TokenComponent from './components/TokenComponent';
 import './Home.css';
 
 function Home() {
@@ -20,11 +21,12 @@ function Home() {
   );
 }
 
+
 function App() {
+  const isLoggedIn = true;
   return (
     <Router>
       <div className="App">
-        
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/users" element={<UsersPage />} />

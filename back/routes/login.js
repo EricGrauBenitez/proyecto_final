@@ -10,15 +10,18 @@ router.post('/', async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    // Verificar las credenciales del usuario en la base de datos
+    if (!(email && password)) {
+      return res.status(400).json({ mensaje: 'Email y contraseña son requeridos' });
+    }
+
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).json({ mensaje: 'Invalid credentials' });
+      return res.status(401).json({ mensaje: 'Credenciales inválidas' });
     }
 
     const passwordValidated = await bcrypt.compare(password, user.password);
     if (!passwordValidated) {
-      return res.status(401).json({ mensaje: 'Invalid credentials' });
+      return res.status(401).json({ mensaje: 'Credenciales inválidas' });
     }
 
     // Generar un token JWT válido
@@ -27,6 +30,7 @@ router.post('/', async (req, res) => {
     // Devolver el token JWT al cliente
     res.status(200).json({ token });
   } catch (error) {
+    console.error('Error en el inicio de sesión', error);
     res.status(500).json({ mensaje: 'Error en el inicio de sesión' });
   }
 });

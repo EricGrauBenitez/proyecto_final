@@ -3,14 +3,20 @@
 /* Estilo para el contenedor principal del chat */
 body {
   background-color: #212121; /* Cambia este valor al color de fondo que desees */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh; 
 }
 .container {
-  max-width: 600px;
+  position: relative;
   margin: 0 auto;
-  padding: 20px;
   border: 1px solid #ccc;
   border-radius: 8px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  width: 80vw;
+  max-height: 75vh;
 }
 
 /* Estilo para el encabezado del chat */
@@ -20,8 +26,20 @@ h1 {
 }
 
 /* Estilo para los mensajes del chat */
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+}
+
+
 .chat-message {
-  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
+}
+
+.message-wrapper {
+  padding: 10px; /* Aumentar espaciado */
+  width: 100%;
 }
 
 /* Estilo para las preguntas */
@@ -29,10 +47,10 @@ h1 {
   text-align: right;
   color: #000000; /* Color del texto para las preguntas */
   border-radius: 20px 20px 0 20px; /* Ajustar bordes para hacerlo más redondito */
-  padding: 10px; /* Aumentar espaciado */
   margin-left: auto; /* Alinear a la izquierda */
   background-color: #ca8e8e;
-  align-self: flex-start;
+  align-self: flex-end;
+  width: 100%;
 }
 
 /* Estilo para las respuestas */
@@ -40,10 +58,9 @@ h1 {
   text-align: left;
   color: #fff; /* Color del texto para las respuestas */
   border-radius: 20px 20px 20px 0; /* Ajustar bordes para hacerlo más redondito */
-  padding: 10px; /* Aumentar espaciado */
-  margin-right: auto; /* Alinear a la derecha */
+  margin-right: auto; 
   background-color: #28415d;
-  align-self: flex-end;
+  align-self: flex-start;
 }
 
 /* Estilo para la sección de preguntas y respuestas */
@@ -60,6 +77,7 @@ input {
   margin-right: 10px;
   border: 1px solid #ccc;
   border-radius: 5px;
+  max-width: 300px;
 }
 
 /* Estilo para los botones */
@@ -79,10 +97,44 @@ button {
 }
 
 /* Estilo para los bocadillos de mensaje */
-.message-bubble {
+ .message-bubble {
   padding: 8px;
-  border-radius: 20px; /* Hacerlo más redondito */
-  margin: 5px;
-  max-width: 70%;
+  border-radius: 20px; 
+   margin: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: auto;
+} 
+.chat-wrapper {
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+.chat-footer {
+  background: #101010;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+  padding-block: 15px;
+  border-radius: 0px 0px 8px 8px;
+
+  & textarea {
+    padding: 15px;
+    margin: 10px;
+    width: 90%;
+    height: 50px;
+  }
 }
 
+.chat-footer-buttons {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}

@@ -10,14 +10,16 @@ exports.saveChat = async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
-console.log(conversation);
+
     const chat = new Chat({
       userId: user._id,
       conversation
     });
-    console.log(chat)
-    await chat.save();
-    res.status(201).json({ message: 'Chat guardado exitosamente' });
+// Guardar el chat en la base de datos
+const savedChat = await chat.save();
+
+// Devolver el chatId generado después de guardar el chat
+res.status(201).json({ chatId: savedChat._id });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al guardar el chat' });

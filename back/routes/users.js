@@ -7,24 +7,6 @@ const bcrypt = require('bcrypt');
 const authMiddleware = require('../middlewares/auth');
 require('dotenv').config();
 
-// Middleware para verificar el token JWT
-const verifyToken = (req, res, next) => {
-  const token = req.headers.authorization;
-
-  if (!token) {
-    return res.status(401).json({ mensaje: 'Token no proporcionado' });
-  }
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) {
-      console.log(process.env.JWT_SECRET);
-      return res.status(401).json({ mensaje: 'Token inválido' });
-    }
-
-    req.user = decoded;
-    next();
-  });
-};
 
 // Ruta para crear un usuario
 router.post('/register', UserController.createUser);

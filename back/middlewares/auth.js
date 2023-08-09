@@ -1,22 +1,20 @@
 const jwt = require('jsonwebtoken');
-require('dotenv').config();
+const config = process.env;
 
-
-const authMiddleware = (req, res, next) => {
-  const token = req.header('Authorization');
-  const jwtSecret = process.env.JWT_SECRET;
+const verifyToken = (req, res, next) => {
+  const token =
+    req.body.token || req.query.token || req.headers["x-access-token"];
 
   if (!token) {
-    return res.status(401).json({ mensaje: 'Acceso no autorizado' });
+    return res.status(403).send("A token is required for authentication");
   }
-
   try {
-    const decoded = jwt.verify(token, jwtSecret);
+    const decoded = jwt.verify(token, config.JWT_SECRET);
     req.user = decoded;
-    next();
-  } catch (error) {
-    return res.status(401).json({ mensaje: 'Acceso no autorizado' });
+  } catch (err) {
+    return res.status(401).send("Invalid Token");
   }
+  return next();
 };
 
-module.exports = authMiddleware;
+module.exports = verifyToken;

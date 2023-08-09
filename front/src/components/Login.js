@@ -1,21 +1,18 @@
 import React, { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { login } from '../features/userSlice'
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './RegisterForm.css'; 
-// Configurar el interceptor de axios
-axios.interceptors.request.use((config) => {
-  const token = localStorage.getItem('token');
-
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
-  return config;
-});
 
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const user = useSelector((state) => state.user.userData)
+  const dispatch = useDispatch()
+  const navigate = useNavigate();
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -29,27 +26,14 @@ const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post('http://localhost:8000/login', {
-        email,
-        password: password,
-      });
-
-      const token = response.data.token;
-
-      // Almacenar el token en el local storage
-      localStorage.setItem('token', token);
-  
-      // Manejar la respuesta del servidor, por ejemplo, guardar el token en el estado o en localStorage.
-
-      console.log(response.data); // Respuesta del servidor
-
-      // Restablecer los campos del formulario
-      setEmail('');
-      setPassword('');
+      // Despachar la acción para manejar el inicio de sesión en Redux
+      dispatch(login({ email, password }));
+      navigate('/chat'); // Redirigir aquí
     } catch (error) {
-      console.error(error);
+      console.error('Error al iniciar sesión', error);
     }
   };
+   
 
   return (
     <div className="container">
