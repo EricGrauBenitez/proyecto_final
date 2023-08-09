@@ -47,3 +47,7 @@ REACT.js
 Para poder ejecutar este proyecto, necesitarás Node.js y React.
 Se trata de un chatbot con la api de Chat GPT, de OpenAI.
 Se diferencian 3 carpetas, una con el frontend (front) , otra con el backend (back) y otra con la lógica y gestión de la api (openai-api).
+
+Para poder empezar, abre tu terminal:
+
+git clone https://github.com/EricGrauBenitez/proyecto_final

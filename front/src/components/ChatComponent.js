@@ -105,18 +105,13 @@ const ChatComponent = () => {
           // Si hay un chat existente, hacer una solicitud PUT para actualizarlo
           const chatId = existingChat._id; // Obtener el ID del chat existente
           await axios.put(`http://localhost:8000/chat/${chatId}`, {
-            conversation: 
-            [{question,
-            answer}]
+            conversation: [{question, answer}]
           });
         } else {
           // Si no hay un chat existente, hacer una solicitud POST para crear uno nuevo
           await axios.post('http://localhost:8000/chat', {
             userId,
-            conversation: [{
-              question,
-              answer
-            }]
+            conversation: [{question, answer}]
           });
         }
   
