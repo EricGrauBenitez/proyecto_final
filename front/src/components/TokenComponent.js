@@ -6,7 +6,7 @@ const TokenComponent = () => {
 
   useEffect(() => {
     // Obtener el token del almacenamiento local del navegador
-    const token = localStorage.getItem('accessToken');
+    const token = localStorage.getItem('token');
 
     // Incluir el token en el encabezado de autorización
     axios.get('http://localhost:3000/chat', {

@@ -4,13 +4,13 @@ import { login } from '../features/userSlice'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './RegisterForm.css'; 
-
+import TokenComponent from './TokenComponent';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const user = useSelector((state) => state.user.userData)
+  // const user = useSelector((state) => state.user.userData)
   const dispatch = useDispatch()
   const navigate = useNavigate();
 
@@ -22,13 +22,14 @@ const Login = () => {
     setPassword(e.target.value);
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
 
     try {
-      // Despachar la acción para manejar el inicio de sesión en Redux
       dispatch(login({ email, password }));
-      navigate('/chat'); // Redirigir aquí
+
+      // Redirects to /chat
+      navigate('/chat');
     } catch (error) {
       console.error('Error al iniciar sesión', error);
     }

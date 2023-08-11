@@ -11,8 +11,8 @@
         });
         this.client.interceptors.request.use((config) => {
           (config.headers).set(
-            "accessToken",
-            localStorage.getItem("accessToken")
+            "token",
+            localStorage.getItem("token")
           );
           return config;
         });
@@ -39,7 +39,7 @@
     }
   
     setAuthorization() {
-      const token = localStorage.getItem("accessToken");
+      const token = localStorage.getItem("token");
       if (token) {
         this.client.defaults.headers.common.Authorization = `Bearer ${token}`;
       } else {

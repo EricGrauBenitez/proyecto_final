@@ -1,11 +1,12 @@
 import './App.css';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import Login from './components/Login';
 import ChatComponent from './components/ChatComponent';
 import UsersPage from './pages/UsersPage';
 import RegisterForm from './components/RegisterForm';
 import TokenComponent from './components/TokenComponent';
+import { useSelector } from 'react-redux';
 import './Home.css';
 
 function Home() {
@@ -21,19 +22,23 @@ function Home() {
   );
 }
 
-
 function App() {
-  const isLoggedIn = true;
+  const isLoggedIn = useSelector((state) => state.user.isLoggedIn); // Cambia esto según el estado de autenticación real
+
+  useEffect(() => {
+    console.log('Is logged in', isLoggedIn);
+  }, [isLoggedIn]);
+
   return (
     <Router>
       <div className="App">
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/users" element={<UsersPage />} />
-          <Route path="/chat" element={<ChatComponent />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<RegisterForm />} />
-
+          <Route path="/chat" element={isLoggedIn ? <ChatComponent /> : <Navigate to="/login" />} />
+          <Route path="/protected" element={isLoggedIn ? <TokenComponent /> : <Navigate to="/login" />} />
         </Routes>
       </div>
     </Router>
