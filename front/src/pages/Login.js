@@ -3,8 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { login } from '../features/userSlice'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './RegisterForm.css'; 
-import TokenComponent from './TokenComponent';
+import '../pages/RegisterForm.css'; 
+import TokenComponent from '../components/TokenComponent';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -14,22 +14,21 @@ const Login = () => {
   const dispatch = useDispatch()
   const navigate = useNavigate();
 
-  const handleEmailChange = (e) => {
-    setEmail(e.target.value);
-  };
-
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
-
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
     try {
-      dispatch(login({ email, password }));
+      const response = await axios.post('http://localhost:8000/login', { email, password }); // Hacer la solicitud POST
 
-      // Redirects to /chat
-      navigate('/chat');
+      if (response.status === 200) {
+        dispatch(login({ email, token: response.data.token })); // Guardar el token en el estado
+        localStorage.setItem('userId', response.data.userId); // Guardar userId en el localStorage
+        // Redirects to /chat only if the response is successful
+        navigate('/chat');
+      } else {
+        console.error('Error al iniciar sesión', response.status);
+      }
+      console.log(response.data.userId);
     } catch (error) {
       console.error('Error al iniciar sesión', error);
     }

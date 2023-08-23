@@ -10,7 +10,10 @@ const verifyToken = (req, res, next) => {
   }
   try {
     const decoded = jwt.verify(token, config.JWT_SECRET);
-    req.user = decoded;
+    req.user = {
+      userId: decoded.userId,
+      chatId: decoded.chatId
+    };
   } catch (err) {
     return res.status(401).send("Invalid Token");
   }

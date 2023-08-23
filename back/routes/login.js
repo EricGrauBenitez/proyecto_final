@@ -24,11 +24,14 @@ router.post('/', async (req, res) => {
       return res.status(401).json({ mensaje: 'Credenciales inválidas' });
     }
 
+    const userId = user._id;
+    const chatId = user.chatId;
+
     // Generar un token JWT válido
-    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ email, userId, chatId }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     // Devolver el token JWT al cliente
-    res.status(200).json({ token });
+    res.status(200).json({ token, userId, chatId });
   } catch (error) {
     console.error('Error en el inicio de sesión', error);
     res.status(500).json({ mensaje: 'Error en el inicio de sesión' });

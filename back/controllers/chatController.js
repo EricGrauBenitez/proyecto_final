@@ -3,7 +3,7 @@ const User = require('../models/User');
 
 // Controlador para guardar el chat
 exports.saveChat = async (req, res) => {
-  const { userId, conversation } = req.body;
+  const { userId, question, answer } = req.body;
 
   try {
     const user = await User.findById(userId);
@@ -11,21 +11,29 @@ exports.saveChat = async (req, res) => {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
+    // Crea una nueva conversación con el chatId y otros datos
+    const conversation = [{ question, answer }];
+
     const chat = new Chat({
       userId: user._id,
       conversation
     });
-// Guardar el chat en la base de datos
-const savedChat = await chat.save();
 
-// Devolver el chatId generado después de guardar el chat
-res.status(201).json({ chatId: savedChat._id });
+    // Guarda el chat en la base de datos
+    const savedChat = await chat.save();
+
+    // Actualiza el chatId en el usuario después de crear el chat
+    user.chatId = savedChat._id;
+    await user.save();
+    
+    // Devuelve el chatId generado después de guardar el chat
+    res.status(201).json({ chatId: savedChat._id });
+    console.log(savedChat._id);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al guardar el chat' });
   }
 };
-
 // Controlador para obtener todos los chats de un usuario específico
 exports.getUserChats = async (req, res) => {
   const { userId } = req.params;

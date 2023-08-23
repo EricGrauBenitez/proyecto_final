@@ -1,10 +1,10 @@
 import './App.css';
 import React, { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
-import Login from './components/Login';
-import ChatComponent from './components/ChatComponent';
+import Login from './pages/Login';
+import Chat from './pages/Chat';
 import UsersPage from './pages/UsersPage';
-import RegisterForm from './components/RegisterForm';
+import RegisterForm from './pages/RegisterForm';
 import TokenComponent from './components/TokenComponent';
 import { useSelector } from 'react-redux';
 import './Home.css';
@@ -37,7 +37,7 @@ function App() {
           <Route path="/users" element={<UsersPage />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<RegisterForm />} />
-          <Route path="/chat" element={isLoggedIn ? <ChatComponent /> : <Navigate to="/login" />} />
+          <Route path="/chat" element={<Chat />} />
           <Route path="/protected" element={isLoggedIn ? <TokenComponent /> : <Navigate to="/login" />} />
         </Routes>
       </div>
