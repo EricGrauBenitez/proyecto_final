@@ -23,7 +23,6 @@ export const userSlice = createSlice({
   initialState,
   reducers: {
     login: async (state, { payload }) => {
-      console.log('STATE 1', state.isloggedIn)
       try {
         const { email, password } = payload;
 
@@ -42,21 +41,21 @@ export const userSlice = createSlice({
 
         state.isLoggedIn = true;
 
-        console.log('STATE 2', state.isloggedIn)
       } catch (error) {
         console.error('Error al iniciar sesión', error);
       }
     },
-    logout: async (state) => {
-        try {
-            console.log('LOGOUT')
-            localStorage.clear()
-            window.location.reload()
-            state.isLoggedIn = false
-        } catch (error) {
-            console.error(error);
-          }
-    },
+    logout: (state) => {
+        return {
+            // localStorage.clear()
+            // window.location.reload()
+            ...state,
+            isLoggedIn: false,
+            userData: null,
+        // } catch (error) {
+        //     console.error(error);
+        //   }
+    }},
     register: () => {}
   },
 })

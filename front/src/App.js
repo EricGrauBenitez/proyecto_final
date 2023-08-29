@@ -8,19 +8,8 @@ import RegisterForm from './pages/RegisterForm';
 import TokenComponent from './components/TokenComponent';
 import { useSelector } from 'react-redux';
 import './Home.css';
+import Home from './pages/Home';
 
-function Home() {
-  return (
-    <div className="container">
-      <h1>CHAT GEPETO</h1>
-      <p>Inicia sesión para usar el chat o regístrate, ¡es muy fácil!.</p>
-      <div className="link-container">
-        <Link className="link" to="/login">Iniciar sesión</Link>
-        <Link className="link" to="/register">Registrarse</Link>
-      </div>
-    </div>
-  );
-}
 
 function App() {
   const isLoggedIn = useSelector((state) => state.user.isLoggedIn); // Cambia esto según el estado de autenticación real

@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import './RegisterForm.css';
+import { useNavigate } from 'react-router-dom';
 
 const RegisterForm = () => {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -19,6 +22,7 @@ const RegisterForm = () => {
 
       // Procesar la respuesta del backend según sea necesario
       console.log('Successful resgister:', response.data);
+      navigate('/');
     } catch (error) {
       // Manejar errores de la solicitud o del backend
       console.error('Error at the register:', error);
@@ -47,6 +51,7 @@ const RegisterForm = () => {
           <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} />
         </div>
         <button type="submit">Register</button>
+        <button onClick={() => navigate('/')}>Go to Home</button>
       </form>
     </div>
   );

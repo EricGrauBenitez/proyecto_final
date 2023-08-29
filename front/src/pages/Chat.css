@@ -15,7 +15,7 @@ body {
   border: 1px solid #ccc;
   border-radius: 8px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
-  width: 80vw;
+  width: 100vw;
   max-height: 75vh;
 }
 
@@ -23,12 +23,14 @@ body {
 h1 {
   text-align: center;
   color: #f9f9f9;
+  margin: 5px 0;
 }
 
 /* Estilo para los mensajes del chat */
 .chat-messages {
   display: flex;
   flex-direction: column;
+  margin-bottom: 50px;
 }
 
 
@@ -48,7 +50,7 @@ h1 {
   color: #000000; /* Color del texto para las preguntas */
   border-radius: 20px 20px 0 20px; /* Ajustar bordes para hacerlo más redondito */
   margin-left: auto; /* Alinear a la izquierda */
-  background-color: #ca8e8e;
+  background-color: #863333;
   align-self: flex-end;
   width: 100%;
 }
@@ -108,12 +110,12 @@ button {
 } 
 .chat-wrapper {
   position: relative;
-  max-height: 90vh;
+  max-height: calc(100vh - 100px);
   overflow-y: auto;
 }
 .chat-footer {
-  background: #101010;
-  position: absolute;
+  background: #212121;
+  position: fixed; /* Cambiar a 'fixed' para anclarlo en la parte inferior */
   bottom: 0;
   left: 0;
   width: 100%;
@@ -126,6 +128,7 @@ button {
   border-radius: 0px 0px 8px 8px;
 
   & textarea {
+    color: #212121;
     padding: 15px;
     margin: 10px;
     width: 90%;

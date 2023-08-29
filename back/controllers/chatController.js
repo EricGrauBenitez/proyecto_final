@@ -3,7 +3,7 @@ const User = require('../models/User');
 
 // Controlador para guardar el chat
 exports.saveChat = async (req, res) => {
-  const { userId, question, answer } = req.body;
+  const { userId, conversation } = req.body;
 
   try {
     const user = await User.findById(userId);
@@ -12,11 +12,10 @@ exports.saveChat = async (req, res) => {
     }
 
     // Crea una nueva conversación con el chatId y otros datos
-    const conversation = [{ question, answer }];
-
+    const { question, answer } = conversation[0];
     const chat = new Chat({
       userId: user._id,
-      conversation
+      conversation: [{ question, answer }]
     });
 
     // Guarda el chat en la base de datos

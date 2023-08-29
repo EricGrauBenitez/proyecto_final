@@ -1,41 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Chat.css'; 
-import { logout } from '../features/userSlice';
 import { useDispatch } from 'react-redux';
-// import { getChatId } from '../api';
+import Logout from '../components/Logout'; 
+import { useNavigate } from 'react-router-dom';
 
-const ChatComponent = () => {
+
+const Chat = () => {
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
   const [chatMessages, setChatMessages] = useState([]);
   const [conversation, setConversation] = useState([]);
   const [userId, setUserId] = useState(localStorage.getItem('userId')); // Usa un estado para el userId
   const [chatId, setChatId] = useState(localStorage.getItem('chatId')); // Usa un estado para el chatId
-
-  // const userId = '64d6758a3a0c2c4a02701efa'; // Prueba con un usuario
-  // const chatId = '64dd63b80c170207c16cafa2';
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   // Obtener el userId desde el localStorage
-  //   const storedUserId = localStorage.getItem('userId');
-
-  //   if (storedUserId) {
-  //     setUserId(storedUserId); // Actualiza el estado con el userId
-
-  //     // Obtener el chatId después de obtener el userId
-  //     const fetchChatId = async () => {
-  //       const fetchedChatId = await getChatId(storedUserId);
-  //       setChatId(fetchedChatId); // Actualiza el estado con el chatId
-  //       // Resto del código para obtener las conversaciones
-  //       // ...
-  //     };
-
-  //     fetchChatId();
-  //   }
-  // }, []);
-  
   useEffect(() => {
     // Obtener la conversación inicial al cargar el componente
     getChatMessages();
@@ -49,12 +29,12 @@ const ChatComponent = () => {
     try {
       const { data } = await axios.get(`http://localhost:8000/chat/${userId}`);
       setChatMessages(data);
-      setConversation(data[0].conversation)
+      setConversation(data[0].conversation);
+      
     } catch (error) {
       console.error('Error al obtener la conversación:', error);
     }
   };
-  
   
   const sendQuestion = async () => {
     try {
@@ -69,17 +49,15 @@ const ChatComponent = () => {
       });
   
       if (response.ok) {
-        const responseBody = await response.json();
-        const answer = responseBody.answer;
+        const answer = await response.text(); // Obtener el contenido JSON de la respuesta
         setAnswer(answer);
+        setConversation(conversation => [...conversation, { question, answer }]);
   
         // Guardar el chat en la base de datos con el answer
         saveChat(userId, question, answer);
-        console.log(answer);
-        // Resto del código...
+        setQuestion('');
       } else {
         console.error('Error en la solicitud:', response.status);
-        console.log(answer);
       }
     } catch (error) {
       console.error('Error en la solicitud:', error);
@@ -87,10 +65,6 @@ const ChatComponent = () => {
   };
   const saveChat = async (userId, question, answer) => {
     try {
-      // Obtener el chatId si existe, o crear uno nuevo
-      const chatIdResponse = await axios.get(`http://localhost:8000/chat/${userId}`);
-      const chatId = chatIdResponse.data.chatId;
-  
       // Verificar si hay un chat existente para actualizar
       const existingChat = chatMessages.find((chat) => chat.userId === userId);
   
@@ -149,7 +123,7 @@ const ChatComponent = () => {
               </div>
               {answer && (
                 <div className="answer message-wrapper">
-                  <p> &#129302 :</p>
+                  <p> &#8704 :</p>
                   <p>{answer}</p>
                 </div>
               )}
@@ -163,11 +137,13 @@ const ChatComponent = () => {
       <div className="chat-footer-buttons">
         <button onClick={sendQuestion}>Enviar</button>
         <button onClick={clearChat}>Borrar Conversación</button>
-        <button onClick={() => dispatch(logout())}>Logout</button>
+        <button onClick={() => navigate('/')}>Go to Home</button>
+        <button onClick={() => navigate('/users')}>User</button>
+        <Logout />
       </div>
     </footer>
     </div>
   );
 };
 
-export default ChatComponent;
+export default Chat;

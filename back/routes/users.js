@@ -12,15 +12,12 @@ require('dotenv').config();
 router.post('/register', UserController.createUser);
 
 // Ruta para obtener todos los usuarios (protegida por el token JWT)
-router.get('/', authMiddleware, UserController.getAllUsers);
+// router.get('/', authMiddleware, UserController.getAllUsers); esto para el admin
 
-// Ruta para obtener un usuario por su ID (protegida por el token JWT)
 router.get('/:id', authMiddleware, UserController.getUserById);
 
-// Ruta para actualizar un usuario (protegida por el token JWT)
 router.put('/:id', authMiddleware, UserController.updateUser);
 
-// Ruta para eliminar un usuario (protegida por el token JWT)
 router.delete('/:id', authMiddleware, UserController.deleteUser);
 
 

@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { login } from '../features/userSlice'
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../pages/RegisterForm.css'; 
-import TokenComponent from '../components/TokenComponent';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -23,12 +22,12 @@ const Login = () => {
       if (response.status === 200) {
         dispatch(login({ email, token: response.data.token })); // Guardar el token en el estado
         localStorage.setItem('userId', response.data.userId); // Guardar userId en el localStorage
-        // Redirects to /chat only if the response is successful
+        localStorage.setItem('chatId', response.data.chatId);
+        
         navigate('/chat');
       } else {
         console.error('Error al iniciar sesión', response.status);
       }
-      console.log(response.data.userId);
     } catch (error) {
       console.error('Error al iniciar sesión', error);
     }
@@ -57,6 +56,8 @@ const Login = () => {
           required />
         </div>
         <button type="submit">Iniciar sesión</button>
+        <button onClick={() => navigate('/')}>Go to Home</button>
+
       </form>
     </div>
   );
