@@ -4,11 +4,19 @@ const chatController = require('../controllers/chatController');
 
 // Ruta para guardar el chat
 router.post('/', chatController.saveChat);
-// GET /chats/:id
+
 router.get('/:userId', chatController.getUserChats);
-// DELETE /chats/:id
+
 router.delete('/:chatId', chatController.deleteChat);
-// PUT
+
 router.put('/:chatId', chatController.updateChat)
+
+// titles
+router.put('/:chatId/title', chatController.editChatTitle);
+
+router.get('/titles/:userId', chatController.getChatTitles);
+
+router.get('/:chatId/title', chatController.getChatTitleById);
+
 
 module.exports = router;

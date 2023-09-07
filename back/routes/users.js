@@ -1,9 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const UserController = require('../controllers/userController');
-const User = require('../models/User');
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
 const authMiddleware = require('../middlewares/auth');
 require('dotenv').config();
 
@@ -16,7 +13,7 @@ router.post('/register', UserController.createUser);
 
 router.get('/:id', authMiddleware, UserController.getUserById);
 
-router.put('/:id', authMiddleware, UserController.updateUser);
+router.put('/:id', UserController.updateUser);
 
 router.delete('/:id', authMiddleware, UserController.deleteUser);
 

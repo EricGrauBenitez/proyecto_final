@@ -46,12 +46,13 @@ export const userSlice = createSlice({
       }
     },
     logout: (state) => {
+      localStorage.clear()
         return {
-            // localStorage.clear()
             // window.location.reload()
             ...state,
             isLoggedIn: false,
             userData: null,
+            
         // } catch (error) {
         //     console.error(error);
         //   }

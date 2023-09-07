@@ -6,6 +6,7 @@ const usersRoutes = require('./routes/users');
 const connectDB = require('./db');
 const loginRouter = require('./routes/login');
 const chatRoutes = require('./routes/chat');
+const passwordRoutes = require('./routes/password')
 require('dotenv').config();
 
 app.use(express.json());
@@ -19,13 +20,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 // ? Rutas
-// app.get('/', (req, res) => {
-//   res.send('<h1>¡Hola, mundo!</h1>');
-// });
+
 app.use('/users', usersRoutes);
 app.use('/chat', chatRoutes);
 app.use('/login', loginRouter); 
-
+app.use('/password', passwordRoutes);
 app.use('/api/v1', chatRoutes);
 app.post('/chat', chatRoutes);
 

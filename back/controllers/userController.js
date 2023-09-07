@@ -6,7 +6,7 @@ const userController = {
   // Crear un usuario
   createUser: async (req, res) => {
     try {
-      const { name, email, password, role } = req.body;
+      const { name, email, password } = req.body;
 
       // Validar la contraseña
     // if (contraseña.length < 8) {
@@ -29,7 +29,7 @@ const userController = {
     const oldUser = await User.findOne({ email });
 
     if (oldUser) {
-      return res.status(409).send("User Already Exist. Please Login");
+      return res.status(409).json({ error: "El usuario ya existe. Por favor, inicie sesión o utilice otro correo electrónico." });
     }
 
       await newUser.save();
@@ -87,6 +87,7 @@ const userController = {
         { name, email, password: hashedPassword, role },
         { new: true }
       );
+
       if (!updatedUser) {
         return res.status(404).json({ mensaje: 'Usuario no encontrado' });
       }

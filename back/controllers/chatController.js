@@ -3,7 +3,7 @@ const User = require('../models/User');
 
 // Controlador para guardar el chat
 exports.saveChat = async (req, res) => {
-  const { userId, conversation } = req.body;
+  const { userId, conversation, title } = req.body;
 
   try {
     const user = await User.findById(userId);
@@ -15,7 +15,8 @@ exports.saveChat = async (req, res) => {
     const { question, answer } = conversation[0];
     const chat = new Chat({
       userId: user._id,
-      conversation: [{ question, answer }]
+      conversation: [{ question, answer }],
+      title
     });
 
     // Guarda el chat en la base de datos
@@ -74,6 +75,7 @@ exports.updateChat = async (req, res) => {
   const { chatId } = req.params;
   const { conversation } = req.body;
   
+  
   try {
     const chat = await Chat.findById(chatId);
     if (!chat) {
@@ -90,9 +92,63 @@ exports.updateChat = async (req, res) => {
     res.status(500).json({ error: 'Error al actualizar el chat' });
   }
 };
+// Controlador para editar el título de un chat específico
+exports.editChatTitle = async (req, res) => {
+  const { chatId } = req.params;
+  const { title } = req.body;
 
+  try {
+    const chat = await Chat.findById(chatId);
+    if (!chat) {
+      return res.status(404).json({ error: 'Chat no encontrado' });
+    }
 
+    chat.title = title;
+    await chat.save();
 
+    res.status(200).json({ message: 'Título del chat actualizado exitosamente' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al actualizar el título del chat' });
+  }
+};
 
+// Controlador para recoger todos los title de un user
+exports.getChatTitles = async (req, res) => {
+  try {
+    const userId  = req.params.userId;
+
+    const chats = await Chat.find({userId: userId});
+
+    if (!chats) {
+      return res.status(404).json({ message: 'Chat no encontrado' });
+    }
+    const titles = chats.map(chat => chat.title);
+
+    res.json({ titles: titles });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error interno del servidor' });
+  }
+}
+
+// Controlador para recoger el title de un chat
+exports.getChatTitleById = async (req, res) => {
+  try {
+    const chatId = req.params.chatId;
+
+    // Busca el chat por su ID y recupera su título
+    const chat = await Chat.findById(chatId);
+
+    if (!chat) {
+      return res.status(404).json({ message: 'Chat no encontrado' });
+    }
+
+    res.json({ title: chat.title });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error interno del servidor' });
+  }
+};
 
 
