@@ -9,8 +9,8 @@ require('dotenv').config();
 var transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: 'erik.grben@gmail.com',
-    pass: 'Bastante1?',
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
   port: 587, // Puerto para TLS
   secure: true, // Habilitar TLS

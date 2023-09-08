@@ -7,7 +7,8 @@ const SidebarChats = ({
   onSelectChat, 
   onSaveChatTitle, 
   handleToggleSidebar, 
-  chatTitles }) => {
+  chatTitles,
+  showSidebar }) => {  
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editedTitle, setEditedTitle] = useState('');
 
@@ -28,8 +29,10 @@ const SidebarChats = ({
   }));
 
   return (
-    <div className="sidebar">
-      <button onClick={handleToggleSidebar}>Toggle Sidebar</button>
+    <div className={`sidebar ${showSidebar ? '' : 'hidden'}`}>
+      <button
+      className="toggle-sidebar-button"
+      onClick={handleToggleSidebar}>Toggle Sidebar</button>
       <ChatList chats={chats} onSelectChat={onSelectChat} />
       <div className="chat-titles">
         {chatTitleArray.map((chatTitle, index) => (

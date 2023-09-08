@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Chat.css'; 
-import { useDispatch } from 'react-redux';
 import Logout from '../components/Logout'; 
 import { useNavigate } from 'react-router-dom';
 import ChatList from '../components/ChatList';
@@ -22,12 +21,11 @@ const Chat = () => {
   const [showSidebar, setShowSidebar] = useState(true);
   const [currentChatId, setCurrentChatId] = useState(null); // Estado para el chat actual
   const [userChats, setUserChats] = useState([]); // Estado para almacenar los chats del usuario
-  const [sidebarVisible, setSidebarVisible] = useState(true);
   const [chatTitles, setChatTitles] = useState([]);
-
 
   const navigate = useNavigate();
 
+  // Conseguir todos los títulos de los chats de un user
   useEffect(() => {
     getChatTitles(); // Esta función debe obtener los títulos de los chats del usuario
   }, []);
@@ -57,15 +55,12 @@ const Chat = () => {
     }
   };
 
-// --------------------
-const toggleSidebar = () => {
-  setSidebarVisible(!sidebarVisible);
-};
+// Función para guardar un nuevo título en la db
 
 const handleSaveChatTitle = async (chatId, newTitle) => {
   try {
     // Realiza una solicitud PUT para actualizar el título del chat en la base de datos
-    await axios.put(`http://localhost:8000/chat/${chatId}`, {
+    await axios.put(`http://localhost:8000/chat/${chatId}/title`, {
       title: newTitle,
     });
 
@@ -83,7 +78,7 @@ const handleSaveChatTitle = async (chatId, newTitle) => {
     console.error('Error al guardar el título del chat:', error);
   }
 };
-// -----------------------------------------
+// Conseguir los mensajes de una conversación
   useEffect(() => {
     getChatMessages();
   }, []);
@@ -168,48 +163,50 @@ const handleSaveChatTitle = async (chatId, newTitle) => {
 
   const handleSendMessage = async () => {
     try {
-      if (chatId) {
-        // Si hay un chat seleccionado, actualiza el chat
-        const response = await axios.put(`http://localhost:8000/chat/${chatId}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
+      if (selectedChat) {
+        // Si hay un chat seleccionado, actualiza el chat usando una solicitud PUT
+        const response = await axios.put(
+          `http://localhost:8000/chat/${chatId}`,
+          {
             conversation: [...selectedChat.conversation, { question, answer }],
-          }),
-        });
+          },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          }
+        );
   
         if (response.status === 200) {
           // Actualiza el estado de la conversación seleccionada
-          setSelectedChat({
+          const updatedSelectedChat = {
             ...selectedChat,
             conversation: [...selectedChat.conversation, { question, answer }],
-          });
+          };
+          setSelectedChat(updatedSelectedChat);
   
           // Actualiza el estado de la conversación en la lista de chats del usuario (userChats)
           const updatedUserChats = userChats.map((chat) =>
             chat._id === selectedChat._id
-              ? { ...chat, conversation: [...chat.conversation, { question, answer }] }
+              ? { ...chat, conversation: updatedSelectedChat.conversation }
               : chat
           );
-          const responseData = await response.json(); 
-        setChatId(responseData.chatId);
           setUserChats(updatedUserChats);
+  
           setQuestion('');
         } else {
           console.error('Error al actualizar el chat:', response.status);
         }
       } else {
-        // Si no hay un chat seleccionado, envía una nueva pregunta
-        const response = await axios.post('http://localhost:4000/api/v1/gpt', {
+        // Si no hay un chat seleccionado, envía una nueva pregunta usando una solicitud POST
+        const response = await fetch('http://localhost:4000/api/v1/gpt', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': 'Bearer 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',
-            'OpenAI-Organization': 'org-GsbDrECiJ47sjAfkaHrfKaDN'
+            Authorization: 'Bearer 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',
+            'OpenAI-Organization': 'org-GsbDrECiJ47sjAfkaHrfKaDN',
           },
-          body: JSON.stringify({ query: question })
+          body: JSON.stringify({ query: question }),
         });
   
         if (response.ok) {
@@ -222,7 +219,7 @@ const handleSaveChatTitle = async (chatId, newTitle) => {
           const newMessage = { question, answer };
           const updatedChat = {
             ...chatMessages[currentChatId],
-            conversation: [...chatMessages[currentChatId].conversation, newMessage]
+            conversation: [...chatMessages[currentChatId].conversation, newMessage],
           };
           setChatMessages({ ...chatMessages, [currentChatId]: updatedChat }); // Actualizar el chat en el estado
           setQuestion('');
@@ -234,6 +231,7 @@ const handleSaveChatTitle = async (chatId, newTitle) => {
       console.error('Error en la solicitud:', error);
     }
   };
+  
 
   const handleCreateChat = async () => {
     try {
@@ -298,35 +296,7 @@ const handleSaveChatTitle = async (chatId, newTitle) => {
     setQuestion(e.target.value);
   };
   
-  // const sendQuestion = async () => {
-  //   try {
-  //     const response = await fetch('http://localhost:4000/api/v1/gpt', {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Authorization': 'Bearer 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',
-  //         'OpenAI-Organization': 'org-GsbDrECiJ47sjAfkaHrfKaDN'
-  //       },
-  //       body: JSON.stringify({ query: question })
-  //     });
-  
-  //     if (response.ok) {
-  //       const answer = await response.text(); 
-  //       setAnswer(answer);
-  //       setConversation(conversation => [...conversation, { question, answer }]);
-  
-  //       // Guardar el chat en la base de datos con el answer
-  //       saveChat(userId, question, answer);
-  //       const responseData = await response.json(); 
-  //       setChatId(responseData.chatId);
-  //       setQuestion('');
-  //     } else {
-  //       console.error('Error en la solicitud:', response.status);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error en la solicitud:', error);
-  //   }
-  // };
+ 
   const saveChat = async (userId, question, answer) => {
     try {
       // Obtener el chat actual
@@ -395,12 +365,15 @@ const handleSaveChatTitle = async (chatId, newTitle) => {
 
   return (
     <div className="container">
+    <button onClick={handleToggleSidebar}>Toggle Sidebar</button>
     <SidebarChats
     chats={userChats}
     onSelectChat={onSelectChat}
     onSaveChatTitle={handleSaveChatTitle}
     handleToggleSidebar={handleToggleSidebar}
     chatTitles={chatTitles} 
+    showSidebar={showSidebar} // Agrega showSidebar como prop
+
   />
       <h1>Chat GPT</h1>
       <section className="chat-wrapper">

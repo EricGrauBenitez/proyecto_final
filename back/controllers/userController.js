@@ -6,7 +6,7 @@ const userController = {
   // Crear un usuario
   createUser: async (req, res) => {
     try {
-      const { name, email, password } = req.body;
+      const { name, lastName, city, country, email, password } = req.body;
 
       // Validar la contraseña
     // if (contraseña.length < 8) {
@@ -19,6 +19,9 @@ const userController = {
 
       const newUser = new User({
         name,
+        lastName,
+        city,
+        country,
         email,
         password: hashedPassword,
         role: 'user'
@@ -69,7 +72,7 @@ const userController = {
   updateUser: async (req, res) => {
     try {
       const { id } = req.params;
-      const { name, email, password, role } = req.body;
+      const { name, lastName, city, country, email, password, role } = req.body;
 
       // Validar la contraseña
     if (password && password.length < 8) {
@@ -84,7 +87,7 @@ const userController = {
 
       const updatedUser = await User.findByIdAndUpdate(
         id,
-        { name, email, password: hashedPassword, role },
+        { name, lastName, city, country, email, password: hashedPassword, role },
         { new: true }
       );
 

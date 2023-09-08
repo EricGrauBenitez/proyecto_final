@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import './UsersPage.css';
+
 const UsersPage = () => {
   const [user, setUser] = useState(null);
   const token = localStorage.getItem('token');
   const userId = localStorage.getItem('userId');
   const [editMode, setEditMode] = useState(false);
-  const [editedValue, setEditedValue] = useState('');
-  const [editedName, setEditedName] = useState('');
-  const [editedEmail, setEditedEmail] = useState('');
-  const [editingField, setEditingField] = useState('');
-  const [editedRole, setEditedRole] = useState('');
+  const [editedData, setEditedData] = useState({}); // Objeto para almacenar los datos editados
+  const [showEditConfirmation, setShowEditConfirmation] = useState(false); // Aviso de confirmación de edición
 
   const navigate = useNavigate();
 
@@ -41,147 +40,178 @@ const UsersPage = () => {
       },
     };
 
-    const chatId = localStorage.getItem('chatId'); // Obtener el chatId del localStorage
-    
     try {
-      // Verificar si hay un chatId almacenado
-      if (chatId) {
-        await axios.delete(`http://localhost:8000/chat/${chatId}`, config);
-      }
-  
       await axios.delete(`http://localhost:8000/users/${userId}`, config);
-      setUser(null); 
+      setUser(null);
       navigate('/');
     } catch (error) {
-      console.error('Error al eliminar el usuario o el chat:', error);
+      console.error('Error al eliminar el usuario:', error);
     }
   };
 
-  const handleEdit = async (field, value) => {
+  const handleEdit = async () => {
+    if (editMode) {
+      const config = {
+        headers: {
+          'x-access-token': token,
+        },
+      };
+      const updatedUserData = { ...user, ...editedData };
+
+      try {
+        // Mostrar la confirmación antes de editar
+        setShowEditConfirmation(true);
+      } catch (error) {
+        console.error('Error al editar el usuario:', error);
+      }
+    } else {
+      setEditMode(true);
+    }
+  };
+
+  const confirmEdit = async () => {
     const config = {
       headers: {
         'x-access-token': token,
       },
     };
-    const updatedUserData = { ...user, [field]: value };
+    const updatedUserData = { ...user, ...editedData };
 
-    axios
-      .put(`http://localhost:8000/users/${userId}`, updatedUserData, config)
-      .then(() => {
-        fetchUserData(); 
-      })
-      .catch((error) => {
-        console.error('Error al editar el usuario:', error);
-      });
-      try {
-        await axios.put(`http://localhost:8000/users/${userId}`, updatedUserData, config);
-        setEditMode(false); 
-        fetchUserData(); 
-      } catch (error) {
-        console.error('Error al editar el usuario:', error);
-      }
-    
-  };
-
-  const cancelEdit = () => {
-    setEditMode(false);
-    setEditingField('');
-    setEditedName('');
-    setEditedEmail('');
-  };
-
-  const enterEditMode = (field) => {
-    setEditingField(field);
-    setEditMode(true);
-    if (field === 'name') {
-      setEditedName(user.name);
-      setEditedEmail('');
-    } else if (field === 'email') {
-      setEditedName('');
-      setEditedEmail(user.email);
+    try {
+      await axios.put(`http://localhost:8000/users/${userId}`, updatedUserData, config);
+      setEditMode(false); // Desactivar el modo de edición
+      setEditedData({}); // Restablecer los datos editados
+      setShowEditConfirmation(false); // Ocultar aviso de confirmación
+      fetchUserData();
+    } catch (error) {
+      console.error('Error al editar el usuario:', error);
     }
   };
 
-  const isEmailValid = (email) => {
-    // Expresión regular para validar el formato de email
-    const emailPattern = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i;
-    return emailPattern.test(email);
+  const cancelEdit = () => {
+    setEditMode(false); // Desactivar el modo de edición
+    setEditedData({}); // Restablecer los datos editados
+    setShowEditConfirmation(false); // Ocultar aviso de confirmación
   };
-  
 
   return (
-    <div>
-      <h1>User</h1>
+    <div className="container">
+      <h1>{user ? `${user.name} ${user.lastName}` : 'Loading...'}</h1>
       {user ? (
         <div>
-          <p>
-            Name: {editMode && editingField === 'name' ? (
-              <>
-                <input
-                  type="text"
-                  value={editedName}
-                  onChange={(e) => setEditedName(e.target.value)}
-                />
-                <button onClick={() => handleEdit('name', editedName)}>Guardar</button>
-                <button onClick={cancelEdit}>Cancelar</button>
-              </>
-            ) : (
-              <>
-                <span>{user.name}</span>
-                <button onClick={() => enterEditMode('name')}>Editar</button>
-              </>
-            )}
-          </p>
-          <p>
-            Email: {editMode && editingField === 'email' ? (
-              <>
-                <input
-                  type="text"
-                  value={editedEmail}
-                  onChange={(e) => setEditedEmail(e.target.value)}
-                />
-                {editMode && editingField === 'email' && !isEmailValid(editedEmail) && (
-                  <p className="error-message">Introduce un email válido</p>
-                )}
-                <button onClick={() => handleEdit('email', editedEmail)}>Guardar</button>
-                <button onClick={cancelEdit}>Cancelar</button>
-              </>
-            ) : (
-              <>
-                <span>{user.email}</span>
-                <button onClick={() => enterEditMode('email')}>Editar</button>
-              </>
-            )}
-          </p>
-          <p>
-          Role: {editMode && editingField === 'role' ? (
-            <select
-              value={editedRole}
-              onChange={(e) => setEditedRole(e.target.value)}
+          <table className="table">
+            <tbody>
+              <tr>
+                <th>Field</th>
+                <th>Value</th>
+              </tr>
+              <tr>
+                <td>Name:</td>
+                <td>
+                  {editMode ? (
+                    <input
+                      type="text"
+                      value={editedData.name || user.name}
+                      onChange={(e) => setEditedData({ ...editedData, name: e.target.value })}
+                    />
+                  ) : (
+                    <span>{user.name}</span>
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td>Last Name:</td>
+                <td>
+                  {editMode ? (
+                    <input
+                      type="text"
+                      value={editedData.lastName || user.lastName}
+                      onChange={(e) => setEditedData({ ...editedData, lastName: e.target.value })}
+                    />
+                  ) : (
+                    <span>{user.lastName}</span>
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td>City:</td>
+                <td>
+                  {editMode ? (
+                    <input
+                      type="text"
+                      value={editedData.city || user.city}
+                      onChange={(e) => setEditedData({ ...editedData, city: e.target.value })}
+                    />
+                  ) : (
+                    <span>{user.city}</span>
+                  )}
+                </td>
+              </tr>
+              <tr>
+                <td>Country:</td>
+                <td>
+                  {editMode ? (
+                    <input
+                      type="text"
+                      value={editedData.country || user.country}
+                      onChange={(e) => setEditedData({ ...editedData, country: e.target.value })}
+                    />
+                  ) : (
+                    <span>{user.country}</span>
+                  )}
+                </td>
+              </tr>
+              
+              <tr>
+                <td>Role:</td>
+                <td>
+                  {editMode ? (
+                    <select
+                      value={editedData.role || user.role}
+                      onChange={(e) => setEditedData({ ...editedData, role: e.target.value })}
+                    >
+                      <option value="user">User</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  ) : (
+                    <span>{user.role}</span>
+                  )}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <div>
+        <button
+          className={`button-edit ${editMode ? 'editing' : ''}`}
+          onClick={handleEdit}
+        >
+          {editMode ? 'Guardar' : 'Editar'}
+        </button>
+        {showEditConfirmation && (
+          <div className="edit-warning-text">
+            ¡Atención! ¿Deseas guardar los cambios?
+            <button
+              className="button-edit"
+              onClick={confirmEdit}
             >
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-            </select>
-          ) : (
-            <span>{user.role}</span>
-          )}
-          {editMode && editingField === 'role' ? (
-            <>
-              <button onClick={() => handleEdit('role', editedRole)}>Guardar</button>
-              <button onClick={cancelEdit}>Cancelar</button>
-            </>
-          ) : (
-            <button onClick={() => enterEditMode('role')}>Editar</button>
-          )}
-        </p>
-          <button onClick={handleDelete}>Eliminar Usuario</button>
-        </div>
+              Confirmar Guardar
+            </button>
+            <button onClick={cancelEdit}>Cancelar</button>
+          </div>
+        )}
+        <button
+          className={`button-danger ${showEditConfirmation ? 'hidden' : ''}`}
+          onClick={handleDelete}
+        >
+          Eliminar Usuario
+        </button>
+      </div>
+      </div>
       ) : (
         <p>Loading...</p>
       )}
     </div>
   );
 };
-
 
 export default UsersPage;

@@ -41,9 +41,9 @@ function App() {
           <Route
             path="/chat"
             element={
-              // {//<PrivateRoute isLoggedIn={isLoggedIn}>
+              //  <PrivateRoute isLoggedIn={isLoggedIn}>
                 <Chat />
-              // </PrivateRoute>}
+              // </PrivateRoute>
             }
           />
           <Route
