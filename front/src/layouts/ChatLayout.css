@@ -141,3 +141,8 @@ button {
   gap: 10px;
   justify-content: center;
 }
+
+.chat-layout {
+  display: flex;
+  width: 100vw;
+}

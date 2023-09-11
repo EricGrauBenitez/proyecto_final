@@ -1,0 +1,7 @@
+.chat-list {
+  padding-top: 5rem;
+  & ul {
+    margin: 0;
+    padding: 0;
+  }
+}

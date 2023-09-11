@@ -3,19 +3,10 @@ import { Api } from '../services'
 
 const API = new Api(); 
 
-/*
-
-  userData = {
-    email: "example@gmail.com",
-    token: "smfksdnfksndfkskd",
-    name: "asdasd"
-    role: "asdasd"
-
-*/
-
 const initialState = {
   userData: null,
-  isLoggedIn: false
+  isLoggedIn: false,
+  currentChat: null
 }
 
 export const userSlice = createSlice({
@@ -27,13 +18,6 @@ export const userSlice = createSlice({
         const { email, password } = payload;
 
         const { data } = await API.post('/login', { email, password });
-
-        /**
-         * email: "example@gmail.com",
-         * token: "smfksdnfksndfkskd",
-         * name: "asdasd"
-         * role: "asdasd"
-         */
 
         const token = data.token;
 

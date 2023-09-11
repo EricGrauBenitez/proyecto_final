@@ -1,30 +1,68 @@
 /* Estilos para el Sidebar */
 .sidebar {
-  width: 250px; /* Ancho inicial del Sidebar */
-  height: 100%;
-  position: fixed;
+  width: auto; /* Ancho inicial del Sidebar */
+  height: 100vh;
+  position: relative;
   top: 0;
   left: 0;
-  background-color: #acacac;
+  background-color: #5b5a5a;
   border-right: 1px solid #ccc;
   padding: 20px;
+  color: white;
   transition: width 0.3s ease; /* Efecto de transición de ancho */
 }
 
 .sidebar.hidden {
-  width: 30px; /* Ancho pequeño cuando está parcialmente oculto */
+  width: 0; /* Ancho 0 cuando está oculto */
   overflow: hidden;
 }
 
-/* Estilo para el botón "Toggle Sidebar" dentro de SidebarChats */
+/* Estilo para el botón "Toggle Sidebar" en el rincón superior izquierdo de la página */
 .toggle-sidebar-button {
   padding: 10px;
   background-color: #007bff;
   color: #fff;
   border: none;
   cursor: pointer;
-  position: absolute;
+  position: fixed;
   top: 10px;
-  left: 5px;
-  z-index: 2; /* Coloca el botón por encima del contenido del sidebar */
+  left: 10px; /* Posición en el rincón superior izquierdo */
+  z-index: 2; /* Coloca el botón por encima del contenido */
+}
+
+/* Estilos para la lista de chat-titles en SidebarChats */
+.chat-titles {
+  margin-top: 20px; /* Agrega margen superior para separar del botón Toggle Sidebar */
+}
+
+.chat-titles ul {
+  list-style: none; 
+  padding: 0; 
+}
+
+.chat-title-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px; 
+}
+
+.chat-title-item span {
+  flex-grow: 1; 
+  cursor: pointer;
+}
+
+.chat-title-item button {
+  margin-left: 10px; /* Espacio entre el título y los botones Edit o Save */
+}
+
+/* Estilos para el botón "Editar" en SidebarChats */
+.edit-button {
+  margin-left: 10px; /* Espacio a la izquierda del botón */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+}
+
+/* Estilos para el botón "Guardar" en SidebarChats cuando se edita el título */
+.save-button {
+  margin-left: 10px; /* Espacio a la izquierda del botón */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
 }

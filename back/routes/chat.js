@@ -3,20 +3,22 @@ const router = express.Router();
 const chatController = require('../controllers/chatController');
 
 // Ruta para guardar el chat
-router.post('/', chatController.saveChat);
+router.post('/:userId', chatController.saveChat);
 
 router.get('/:userId', chatController.getUserChats);
 
-router.delete('/:chatId', chatController.deleteChat);
+router.get('/:userId/:chatId', chatController.getConversationByChatId);
 
-router.put('/:chatId', chatController.updateChat)
+router.delete('/:userId/:chatId', chatController.deleteChat);
+
+router.put('/:userId/:chatId', chatController.updateChat)
 
 // titles
-router.put('/:chatId/title', chatController.editChatTitle);
+// router.put('/title/:userId/:chatId', chatController.editChatTitle);
 
-router.get('/titles/:userId', chatController.getChatTitles);
+// router.get('/titles/:userId/:chatId', chatController.getConversationTitles);
 
-router.get('/:chatId/title', chatController.getChatTitleById);
+// router.get('/title/:userId/:chatId', chatController.getChatTitleById);
 
 
 module.exports = router;

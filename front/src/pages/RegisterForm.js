@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const RegisterForm = () => {
   const [name, setName] = useState('');
+  const [lastName, setLastName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -22,6 +23,10 @@ const RegisterForm = () => {
       setMissingField("nombre");
       setError(`Por favor, complete el campo "nombre".`);
       return;
+    } else if (!lastName) {
+        setMissingField("lastname");
+        setError(`Por favor, complete el campo "Last Name".`);
+        return;
     } else if (!email) {
       setMissingField("correo electrónico");
       setError(`Por favor, complete el campo "correo electrónico".`);
@@ -42,6 +47,7 @@ const RegisterForm = () => {
     try {
       const response = await axios.post('http://localhost:8000/users/register', {
         name,
+        lastName,
         email,
         password
       });
@@ -61,6 +67,7 @@ const RegisterForm = () => {
     // setEmail('');
     // setPassword('');
     // setConfirmPassword('');
+    // setLastName(');
     setError('');
   };
 
@@ -77,6 +84,16 @@ const RegisterForm = () => {
             value={name}
             onChange={(e) => setName(e.target.value)}
             className={missingField === "nombre" ? "error-input" : ""}
+          />
+        </div>
+        <div>
+          <label htmlFor="name">Lastname:</label>
+          <input
+            type="text"
+            id="lastname"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            className={missingField === "lastName" ? "error-input" : ""}
           />
         </div>
         <div>

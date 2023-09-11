@@ -2,8 +2,9 @@ import './App.css';
 import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
-import Chat from './pages/Chat';
+import ChatLayout from './layouts/ChatLayout';
 import UsersPage from './pages/UsersPage';
+import Chati from './pages/Chati';
 import ResetPassword from './pages/ResetPassword';
 import ForgotPassword from './pages/ForgotPassword';
 import RegisterForm from './pages/RegisterForm';
@@ -11,6 +12,7 @@ import PrivateRoute from './components/PrivateRoute';
 import { useSelector } from 'react-redux';
 import './Home.css';
 import Home from './pages/Home';
+import ConversationPage from './pages/Conversation';
 
 
 function App() {
@@ -35,17 +37,20 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<RegisterForm />} />
+          <Route path="/register" element={<RegisterForm />} />                    
+          <Route path="/chati" element={<Chati />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route
             path="/chat"
-            element={
-              //  <PrivateRoute isLoggedIn={isLoggedIn}>
-                <Chat />
-              // </PrivateRoute>
-            }
-          />
+            element={<ChatLayout />}>
+            <Route
+              path=":chatId"
+              element={
+                  <ConversationPage />
+              }
+            />
+          </Route>
           <Route
           path="/users"
           element={

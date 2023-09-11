@@ -10,8 +10,29 @@ diferentes rutas:
 http://localhost:8000/login POST
 
 http://localhost:8000/users/register POST Para registro de usuarios
-
-http://localhost:8000/login POST Para el login de usuarios
+Por ejemplo:
+{
+"name": "Nombre del Usuario",
+"lastName": "Apellido del Usuario",
+"city": "Ciudad (opcional)",
+"country": "País (opcional)",
+"email": "correo@ejemplo.com",
+"password": "contraseña_segura",
+"chats": [
+{
+"\_id": "ID_DEL_CHAT_1",
+"conversation": [],
+"title": "Título del Chat 1",
+"createdAt": 1631295667000
+},
+{
+"\_id": "ID_DEL_CHAT_2",
+"conversation": [],
+"title": "Título del Chat 2",
+"createdAt": 1631295668000
+}
+]
+}
 
 Para autenticación JWT:
 -POST a http://localhost:8000/login
@@ -27,19 +48,26 @@ Una vez autenticado:
 
 CHAT
 
-POST a http://localhost:8000/chat
+POST a http://localhost:8000/chat/:userId/
 con estructura JSON:
 {
-"userId": "64a82ca1aed18ca9c757cc60",
+"conversation": [
+{
+"question": "Primera pregunta",
+"answer": "Primera respuesta"
+}
+],
+"title": "Título del Nuevo Chat"
+}
+
+-Para conseguir un chat de un usuario: GET a http://localhost:8000/chat/:userId/:chatId
+-Para borrar un chat de un usuario: DELETE a http://localhost:8000/chat/:userId/:chatId
+-Para actualizarlo: PUT a http://localhost:8000/chat/:userId/:chatId
+{
 "conversation":
 [{"question":"hola",
 "answer":"bien"}]
 }
-Al hacer esto se generará un chatId tanto en la bbdd como en la respuesta.
-
--Para conseguir un chat de un usuario: GET a http://localhost:8000/chat/:userId
--Para borrar un chat de un usuario: DELETE a http://localhost:8000/chat/:chatId
--Para actualizarlo: PUT a http://localhost:8000/chat/:chatId
 
 SOBRE TITLES:
 

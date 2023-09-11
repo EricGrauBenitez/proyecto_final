@@ -1,12 +1,12 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
-
+const { v4: uuidv4 } = require('uuid');
 
 const userController = {
   // Crear un usuario
   createUser: async (req, res) => {
     try {
-      const { name, lastName, city, country, email, password } = req.body;
+      const { name, lastName, city, country, email, password, chats } = req.body;
 
       // Validar la contraseña
     // if (contraseña.length < 8) {
@@ -24,7 +24,15 @@ const userController = {
         country,
         email,
         password: hashedPassword,
-        role: 'user'
+        role: 'user',
+        chats: [
+          {
+            _id: uuidv4(),
+            conversation: [],
+            title: "New chat",
+            createdAt: new Date().getTime()
+          }
+        ]
       });
 
     // check if user already exist
@@ -72,7 +80,7 @@ const userController = {
   updateUser: async (req, res) => {
     try {
       const { id } = req.params;
-      const { name, lastName, city, country, email, password, role } = req.body;
+      const { name, lastName, city, country, email, password, role, chats } = req.body;
 
       // Validar la contraseña
     if (password && password.length < 8) {
@@ -87,7 +95,7 @@ const userController = {
 
       const updatedUser = await User.findByIdAndUpdate(
         id,
-        { name, lastName, city, country, email, password: hashedPassword, role },
+        { name, lastName, city, country, email, password: hashedPassword, role, chats },
         { new: true }
       );
 

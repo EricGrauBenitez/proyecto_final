@@ -3,7 +3,6 @@ const router = express.Router();
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const Chat = require('../models/Chat')
 require('dotenv').config();
 
 // Ruta para inicio de sesión
@@ -25,17 +24,14 @@ router.post('/', async (req, res) => {
       return res.status(401).json({ mensaje: 'Credenciales inválidas' });
     }
 
-    const chat = await Chat.findOne({ userId: user._id });
-    const chatId = chat ? chat._id : null;
-    
-    const userId = user._id;
-    // const chatId = Chat._Id;
+    // Aquí obtenemos el chatId del usuario si existe en el primer chat
+    const chatId = user.chats.length > 0 ? user.chats[0]._id : null;
 
     // Generar un token JWT válido
-    const token = jwt.sign({ email, userId, chatId }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    const token = jwt.sign({ email, userId: user._id, chatId }, process.env.JWT_SECRET, { expiresIn: '1h' });
 
     // Devolver el token JWT al cliente
-    res.status(200).json({ token, userId, chatId });
+    res.status(200).json({ token, userId: user._id, chatId });
   } catch (error) {
     console.error('Error en el inicio de sesión', error);
     res.status(500).json({ mensaje: 'Error en el inicio de sesión' });

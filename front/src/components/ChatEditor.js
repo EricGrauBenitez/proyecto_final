@@ -1,26 +1,26 @@
 import { useState } from "react";
+import './ChatEditor.css'
 
-const ChatEditor = ({ selectedChat, onSaveChat, onToggleSidebar }) => {
-  const [editedTitle, setEditedTitle] = useState(selectedChat.title); // Estado para el título editado
+const ChatEditor = ({ title, selectedChat, onSaveChat, onCloseEditor }) => {
+  const [titleToEdit, setTitleToEdit] = useState(title);
 
   const handleTitleChange = (e) => {
-    setEditedTitle(e.target.value);
+    setTitleToEdit(e.target.value);
   };
 
   const saveEditedChat = () => {
-    // Realizar una solicitud PUT para guardar el título editado en la base de datos
-    onSaveChat(selectedChat._id, editedTitle);
+    onSaveChat(titleToEdit);
   };
 
   return (
     <div className="chat-editor">
-      <input
-        type="text"
-        value={editedTitle}
-        onChange={handleTitleChange}
-      />
-      <button onClick={saveEditedChat}>Guardar Título</button>
-      <button onClick={onToggleSidebar}>Cerrar Editor</button>
+          <input
+            type="text"
+            value={titleToEdit}
+            onChange={handleTitleChange}
+          />
+          <button onClick={saveEditedChat}>Guardar Título</button>
+          <button onClick={onCloseEditor}>Cerrar Editor</button>
     </div>
   );
 };

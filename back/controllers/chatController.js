@@ -1,39 +1,44 @@
-const Chat = require('../models/Chat');
 const User = require('../models/User');
+const { v4: uuidv4 } = require('uuid');
 
 // Controlador para guardar el chat
 exports.saveChat = async (req, res) => {
-  const { userId, conversation, title } = req.body;
+  const { conversation, title } = req.body;
+  const { userId } = req.params;
 
   try {
+    // Genera un nuevo chatId único usando uuidv4
+    const chatId = uuidv4();
+
+    // Crea el nuevo chat con el chatId generado y otros datos
+    const newChat = {
+      _id: chatId,
+      conversation: conversation,
+      title: title,
+      createdAt: Date.now(),
+    };
+
+    // Encuentra al usuario por su ID
     const user = await User.findById(userId);
+
     if (!user) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
-    // Crea una nueva conversación con el chatId y otros datos
-    const { question, answer } = conversation[0];
-    const chat = new Chat({
-      userId: user._id,
-      conversation: [{ question, answer }],
-      title
-    });
+    // Agrega el nuevo chat al usuario
+    user.chats.push(newChat);
 
-    // Guarda el chat en la base de datos
-    const savedChat = await chat.save();
-
-    // Actualiza el chatId en el usuario después de crear el chat
-    user.chatId = savedChat._id;
+    // Guarda al usuario actualizado
     await user.save();
-    
+
     // Devuelve el chatId generado después de guardar el chat
-    res.status(201).json({ chatId: savedChat._id });
-    console.log(savedChat._id);
+    res.status(201).json({ chatId: chatId });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al guardar el chat' });
   }
 };
+
 // Controlador para obtener todos los chats de un usuario específico
 exports.getUserChats = async (req, res) => {
   const { userId } = req.params;
@@ -43,67 +48,111 @@ exports.getUserChats = async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
-
-    const chats = await Chat.find({ userId: user._id });
-    res.status(200).json(chats);
+    res.status(200).json(user.chats);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al obtener los chats del usuario' });
   }
 };
 
-// Controlador para eliminar un chat específico
-exports.deleteChat = async (req, res) => {
-  const chatId = req.params.chatId;
-
+exports.getConversationByChatId = async (req, res) => {
+  const { userId, chatId } = req.params;
+  
   try {
-    // Buscar y eliminar el chat por su chatId
-    const deletedChat = await Chat.findByIdAndDelete(chatId);
-
-    if (!deletedChat) {
-      return res.status(404).json({ error: 'Mensaje del chat no encontrado' });
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
-    res.json({ message: 'Mensaje del chat eliminado exitosamente' });
+    // const chat = await Chat.findOne({ _id: chatId, userId: user._id });
+    const chat = user.chats.find(chat => chat._id === chatId)
+
+    if (!chat) {
+      return res.status(404).json({ error: 'Conversación no encontrada' });
+    }
+
+    res.status(200).json(chat.conversation);
   } catch (error) {
-    console.error('Error al eliminar el mensaje del chat:', error);
-    res.status(500).json({ error: 'Error al eliminar el mensaje del chat' });
+    console.error(error);
+    res.status(500).json({ error: 'Error al obtener la conversación' });
   }
 };
-// Controlador para actualizar un chat específico
-exports.updateChat = async (req, res) => {
-  const { chatId } = req.params;
-  const { conversation } = req.body;
-  
-  
+
+// Controlador para eliminar un chat específico
+exports.deleteChat = async (req, res) => {
+  const { userId, chatId } = req.params;
+
   try {
-    const chat = await Chat.findById(chatId);
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    // Filtra los chats para mantener solo los que no coincidan con el chatId a eliminar
+    user.chats = user.chats.filter((chat) => chat._id !== chatId);
+
+    // Guarda el usuario actualizado sin el chat eliminado
+    await user.save();
+
+    res.json({ message: 'Chat eliminado exitosamente' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al eliminar el chat' });
+  }
+};
+
+// Controlador para actualizar un chat específico
+
+exports.updateChat = async (req, res) => {
+  const { userId, chatId } = req.params;
+  const { conversation, title } = req.body;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    let chat = user.chats.find((chat) => chat._id === chatId);
     if (!chat) {
       return res.status(404).json({ error: 'Chat no encontrado' });
     }
 
-    const currentConversation = chat.conversation;
-    chat.conversation = [...currentConversation, ...conversation]
-    await chat.save();
+    chat = {
+      ...chat,
+      conversation: [...chat.conversation, ...conversation],
+      title
+    };
 
-    res.status(200).json({ message: 'Chat actualizado exitosamente' });
+    const filteredChats = user.chats.filter(chat => chat._id !== chatId)
+
+    user.chats = [
+      ...filteredChats,
+      chat
+    ]
+
+    // Guarda el usuario actualizado
+    await user.save();
+
+    res.status(200).json({ message: 'Chat actualizado exitosamente', chatId: chat._id });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error al actualizar el chat' });
   }
 };
+
 // Controlador para editar el título de un chat específico
 exports.editChatTitle = async (req, res) => {
-  const { chatId } = req.params;
+  const { userId, chatId } = req.params;
   const { title } = req.body;
 
   try {
-    const chat = await Chat.findById(chatId);
-    if (!chat) {
-      return res.status(404).json({ error: 'Chat no encontrado' });
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
     }
 
-    chat.title = title;
+    chat.chats.title = title;
     await chat.save();
 
     res.status(200).json({ message: 'Título del chat actualizado exitosamente' });
@@ -114,16 +163,17 @@ exports.editChatTitle = async (req, res) => {
 };
 
 // Controlador para recoger todos los title de un user
-exports.getChatTitles = async (req, res) => {
+exports.getConversationTitles = async (req, res) => {
   try {
-    const userId  = req.params.userId;
+    const { userId, chatId }  = req.params;
+    
 
-    const chats = await Chat.find({userId: userId});
-
-    if (!chats) {
+    const user = await User.findById(userId, 'chats');
+    if (!user) {
       return res.status(404).json({ message: 'Chat no encontrado' });
     }
-    const titles = chats.map(chat => chat.title);
+    const titles = user.chats.map(chat => chat.title);
+
 
     res.json({ titles: titles });
   } catch (error) {
