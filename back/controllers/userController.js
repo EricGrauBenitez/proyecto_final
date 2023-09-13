@@ -9,13 +9,14 @@ const userController = {
       const { name, lastName, city, country, email, password, chats } = req.body;
 
       // Validar la contraseña
-    // if (contraseña.length < 8) {
-    //   return res.status(400).json({ mensaje: 'La contraseña debe tener al menos 8 caracteres' });
-    // }
+      // if (contraseña.length < 8) {
+      //   return res.status(400).json({ mensaje: 'La contraseña debe tener al menos 8 caracteres' });
+      // }
 
-    // Generar el hash de la contraseña
+      // Generar el hash de la contraseña
       const hashedPassword = await bcrypt.hash(password, 10);
-
+      console.log(hashedPassword);
+      console.log(password);
 
       const newUser = new User({
         name,
@@ -35,13 +36,13 @@ const userController = {
         ]
       });
 
-    // check if user already exist
-    // Validate if user exist in our database
-    const oldUser = await User.findOne({ email });
+      // check if user already exist
+      // Validate if user exist in our database
+      const oldUser = await User.findOne({ email });
 
-    if (oldUser) {
-      return res.status(409).json({ error: "El usuario ya existe. Por favor, inicie sesión o utilice otro correo electrónico." });
-    }
+      if (oldUser) {
+        return res.status(409).json({ error: "El usuario ya existe. Por favor, inicie sesión o utilice otro correo electrónico." });
+      }
 
       await newUser.save();
 
@@ -63,7 +64,7 @@ const userController = {
 
   // Obtener un usuario por su ID
   getUserById: async (req, res) => {
-    
+
     try {
       const { id } = req.params;
       const user = await User.findById(id);
@@ -83,15 +84,15 @@ const userController = {
       const { name, lastName, city, country, email, password, role, chats } = req.body;
 
       // Validar la contraseña
-    if (password && password.length < 8) {
-      return res.status(400).json({ mensaje: 'La contraseña debe tener al menos 8 caracteres' });
-    }
+      if (password && password.length < 8) {
+        return res.status(400).json({ mensaje: 'La contraseña debe tener al menos 8 caracteres' });
+      }
 
-    // Generar el hash de la nueva contraseña (si se proporciona)
-    let hashedPassword;
-    if (password) {
-      hashedPassword = await bcrypt.hash(password, 10);
-    }
+      // Generar el hash de la nueva contraseña (si se proporciona)
+      let hashedPassword;
+      if (password) {
+        hashedPassword = await bcrypt.hash(password, 10);
+      }
 
       const updatedUser = await User.findByIdAndUpdate(
         id,
@@ -120,7 +121,29 @@ const userController = {
     } catch (error) {
       res.status(500).json({ mensaje: 'Error al eliminar el usuario' });
     }
-  }
+  },
+
+  getUserByEmail: async (req, res) => {
+    const userEmail = req.body.email;
+
+    try {
+      // Buscar un usuario en la base de datos por correo electrónico
+      const user = await User.findOne({ email: userEmail });
+
+      if (!user) {
+        return res.status(404).json({ message: 'Usuario no encontrado' });
+      }
+
+      // Responder con los datos del usuario encontrado
+      res.json({ userId: user._id });
+    } catch (error) {
+      console.error('Error al buscar usuario por correo electrónico:', error);
+      res.status(500).json({ message: 'Error interno del servidor' });
+    }
+  },
+
+
 };
+
 
 module.exports = userController;

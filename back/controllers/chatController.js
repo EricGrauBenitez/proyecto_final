@@ -15,7 +15,8 @@ exports.saveChat = async (req, res) => {
       _id: chatId,
       conversation: conversation,
       title: title,
-      createdAt: Date.now(),
+      createdAt: new Date().getTime(),
+      updateAt: new Date().getTime()
     };
 
     // Encuentra al usuario por su ID
@@ -57,7 +58,7 @@ exports.getUserChats = async (req, res) => {
 
 exports.getConversationByChatId = async (req, res) => {
   const { userId, chatId } = req.params;
-  
+
   try {
     const user = await User.findById(userId);
     if (!user) {
@@ -101,6 +102,39 @@ exports.deleteChat = async (req, res) => {
   }
 };
 
+exports.cleanConversation = async (req, res) => {
+  const { userId, chatId } = req.params;
+
+  try {
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'Usuario no encontrado' });
+    }
+
+    let chat = user.chats.find((chat) => chat._id === chatId);
+    if (!chat) {
+      return res.status(404).json({ error: 'Chat no encontrado' });
+    }
+
+    chat.conversation = [];
+
+    const filteredChats = user.chats.filter(chat => chat._id !== chatId)
+
+    user.chats = [
+      ...filteredChats,
+      chat
+    ]
+
+    // Guarda el usuario actualizado
+    await user.save();
+
+    res.status(200).json({ message: 'Conversación borrada exitosamente', chatId: chat._id });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Error al limpia la conversación' });
+  }
+}
+
 // Controlador para actualizar un chat específico
 
 exports.updateChat = async (req, res) => {
@@ -120,6 +154,7 @@ exports.updateChat = async (req, res) => {
 
     chat = {
       ...chat,
+      updateAt: new Date().getTime(),
       conversation: [...chat.conversation, ...conversation],
       title
     };
@@ -151,8 +186,8 @@ exports.editChatTitle = async (req, res) => {
     if (!user) {
       return res.status(404).json({ error: 'Usuario no encontrado' });
     }
-
-    chat.chats.title = title;
+    chat.updateAt = new Date().getTime(),
+      chat.chats.title = title;
     await chat.save();
 
     res.status(200).json({ message: 'Título del chat actualizado exitosamente' });
@@ -165,8 +200,8 @@ exports.editChatTitle = async (req, res) => {
 // Controlador para recoger todos los title de un user
 exports.getConversationTitles = async (req, res) => {
   try {
-    const { userId, chatId }  = req.params;
-    
+    const { userId, chatId } = req.params;
+
 
     const user = await User.findById(userId, 'chats');
     if (!user) {

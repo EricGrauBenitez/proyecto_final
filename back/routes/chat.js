@@ -11,6 +11,8 @@ router.get('/:userId/:chatId', chatController.getConversationByChatId);
 
 router.delete('/:userId/:chatId', chatController.deleteChat);
 
+router.put('/conversation/:userId/:chatId', chatController.cleanConversation);
+
 router.put('/:userId/:chatId', chatController.updateChat)
 
 // titles

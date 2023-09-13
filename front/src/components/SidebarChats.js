@@ -1,17 +1,20 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import ChatList from './ChatList';
-import ChatEditor from './ChatEditor'; 
-import './SidebarChats.css';
+import ChatEditor from './ChatEditor';
+import '../css/SidebarChats.css';
 
 const SidebarChats = ({
   showSidebar,
   onSaveChatTitle,
+  getChatMessages
 }) => {
   const navigate = useNavigate();
-
+  const userId = localStorage.getItem('userId');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editedTitle, setEditedTitle] = useState('');
   const [selectedChat, setSelectedChat] = useState(null);
@@ -31,11 +34,22 @@ const SidebarChats = ({
 
   const onSelectChat = (chatId) => navigate(`/chat/${chatId}`)
 
+  const onCreateNewChat = async () => {
+    try {
+      // Hacer una solicitud POST al servidor para crear una nueva conversación
+      const response = await axios.post(`http://localhost:8000/chat/${userId}`);
+      getChatMessages()
+    } catch (error) {
+      console.error('Error al crear una nueva conversación:', error);
+    }
+  }
+
   return (
     <div className={`sidebar ${showSidebar ? '' : 'hidden'}`}>
-      <ChatList chats={chats} onSelectChat={onSelectChat} />
+      <button onClick={onCreateNewChat}>Crear nuevo chat</button>
+      <ChatList chats={chats} onSelectChat={onSelectChat} getChatMessages={getChatMessages} />
       <div className="chat-titles">
-      {/* <ul>
+        {/* <ul>
         {chatTitleArray.map((chatTitle, index) => (
           <li key={index} className="chat-title-item">
             {isEditingTitle === chatTitle.chatId ? (
@@ -70,7 +84,7 @@ const SidebarChats = ({
       </li>
     ))}
     </ul> */}
-  </div>
+      </div>
       {/* Agregar el componente ChatEditor */}
       {selectedChat && (
         <ChatEditor

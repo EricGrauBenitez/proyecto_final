@@ -1,30 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './ChatLayout.css'; 
+import '../css/ChatLayout.css';
+import { IoIosSend, IoMdMenu } from 'react-icons/io';
+import { BsLayoutSidebarReverse } from 'react-icons/bs'
+import { AiFillHome, AiOutlineUser } from 'react-icons/ai';
+
 import Logout from '../components/Logout';
 import SidebarChats from '../components/SidebarChats';
-import ConversationPage from '../pages/Conversation' ;
-import { useNavigate, Outlet } from 'react-router-dom';
+import ConversationPage from '../pages/Conversation';
+import { useNavigate, Outlet, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentChat, setConversation, setChats } from '../features/chatSlice';
 
 const ChatLayout = () => {
   const navigate = useNavigate();
+  const { chatId } = useParams();
   const dispatch = useDispatch();
 
   const [question, setQuestion] = useState('');
   const [answer, setAnswer] = useState('');
-  const [chatId, setChatId] = useState(localStorage.getItem('chatId')) 
+  // const [chatId, setChatId] = useState(params.chatId)
   const [showSidebar, setShowSidebar] = useState(true);
 
 
-  const userId = localStorage.getItem('userId'); 
+  const userId = localStorage.getItem('userId');
 
   const currentChat = useSelector(state => state.chat.currentChat)
 
   useEffect(() => {
-    if (chatId) dispatch(setCurrentChat(chatId))
-    return () => {}
+    dispatch(setCurrentChat(chatId))
+    return () => { }
   }, [chatId])
 
   useEffect(() => {
@@ -32,7 +37,7 @@ const ChatLayout = () => {
       getChatConversation()
       navigate(`/chat/${currentChat}`)
     }
-    return () => {}
+    return () => { }
   }, [currentChat])
 
   useEffect(() => {
@@ -56,7 +61,7 @@ const ChatLayout = () => {
       });
 
       if (response.ok) {
-        const answer = await response.text(); 
+        const answer = await response.text();
 
         setAnswer(answer);
         saveChat(question, answer);
@@ -73,24 +78,25 @@ const ChatLayout = () => {
       const chatData = {
         conversation: [{ question, answer }]
       };
-  
+
       let response;
 
       console.log('CHAT ID', chatId)
-  
-      if (chatId) {
-        response = await axios.put(`http://localhost:8000/chat/${userId}/${chatId}`, chatData);
-      } else {
-        response = await axios.post(`http://localhost:8000/chat/${userId}`, chatData);
-        localStorage.setItem('chatId', response.data.chatId)
-      } 
-  
+
+      // if (chatId) {
+      //   response = await axios.put(`http://localhost:8000/chat/${userId}/${chatId}`, chatData);
+      // } else {
+      //   response = await axios.post(`http://localhost:8000/chat/${userId}`, chatData);
+      //   localStorage.setItem('chatId', response.data.chatId)
+      //   setChatId(response.data.chatId)
+      // }
+      response = await axios.put(`http://localhost:8000/chat/${userId}/${chatId}`, chatData);
+
       if (response.status === 200 || response.status === 201) {
         // Actualizar el estado de chatMessages con la nueva conversación
         getChatMessages();
-
         getChatConversation();
-  
+
         // Limpiar el input de pregunta después de enviarla
         setQuestion('');
       } else if (response.status === 404) {
@@ -102,22 +108,19 @@ const ChatLayout = () => {
       console.error('Error al guardar el chat:', error);
     }
   };
-  
+
   const clearChat = async () => {
-  try {
-    if (chatId) {
+    try {
       await axios.delete(`http://localhost:8000/chat/${userId}/${chatId}`, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
 
-    dispatch(setConversation([]))
-    localStorage.removeItem('chatId')
-    setChatId(null)
-  } else {
-    console.log('No hay chatId válido para borrar');
-  }
+      dispatch(setConversation([]))
+      // localStorage.removeItem('chatId')
+      // setChatId(null)
+
     } catch (error) {
       console.error('Error al borrar la conversación:', error);
     }
@@ -142,30 +145,37 @@ const ChatLayout = () => {
       // Manejar el error, por ejemplo, mostrar un mensaje de error al usuario
     }
   }
-   const handleToggleSidebar = () => {
+  const handleToggleSidebar = () => {
     setShowSidebar(!showSidebar);
   };
 
-   return (
+  return (
     <>
-      <button className="toggle-sidebar-button" onClick={handleToggleSidebar}>
-        Toggle Sidebar
-      </button>
-      <div className="chat-layout">
-        <SidebarChats showSidebar={showSidebar} />
-      <div className="container">
-        <h1>Chat GPT</h1>
-        <Outlet />
-        <footer className="chat-footer">
-          <textarea type="text" placeholder="Nueva pregunta" value={question} onChange={handleQuestionChange} />
-          <div className="chat-footer-buttons">
-            <button onClick={sendQuestion}>Enviar</button>
-            <button onClick={clearChat}>Borrar Conversación</button>
-            <button onClick={() => navigate('/')}>Go to Home</button>
-            <button onClick={() => navigate('/users')}>User</button>
-            <Logout />
+      <div className="toggle-sidebar-container">
+        <button
+          className={`toggle-sidebar-button ${showSidebar ? 'move-right' : ''}`}
+          onClick={handleToggleSidebar}
+        >
+          <BsLayoutSidebarReverse />
+        </button>
+        <div className="chat-layout">
+          <SidebarChats showSidebar={showSidebar} getChatMessages={getChatMessages} />
+          <div className="container">
+            <h1>Chat GPT</h1>
+            <Outlet />
+            <footer className="chat-footer">
+              <div className='textarea-container'>
+                <textarea type="text" placeholder="Nueva pregunta" value={question} onChange={handleQuestionChange} />
+                <button onClick={sendQuestion}><IoIosSend /></button>
+              </div>
+              <div className="chat-footer-buttons">
+                <button onClick={clearChat}>Borrar Conversación</button>
+                <button onClick={() => navigate('/')}><AiFillHome /></button>
+                <button onClick={() => navigate('/users')}><AiOutlineUser /></button>
+                <Logout />
+              </div>
+            </footer>
           </div>
-        </footer>
         </div>
       </div>
     </>

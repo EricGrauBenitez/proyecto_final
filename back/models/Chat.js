@@ -6,10 +6,17 @@ const conversationSchema = new mongoose.Schema({
 });
 
 exports.chatSchema = new mongoose.Schema({
-  _id: { 
+  _id: {
     type: String
   },
   conversation: [conversationSchema],
-  title: { type: String, default: 'New Chat'},
-  createdAt: { type: Number },
+  title: { type: String, default: 'New Chat' },
+  createdAt: {
+    type: Number,
+    default: new Date().getTime()
+  },
+  updateAt: {
+    type: Number,
+    default: new Date().getTime()
+  }
 });

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import './RegisterForm.css';
+import '../css/RegisterForm.css';
 import { useNavigate } from 'react-router-dom';
 
 const RegisterForm = () => {
@@ -24,9 +24,9 @@ const RegisterForm = () => {
       setError(`Por favor, complete el campo "nombre".`);
       return;
     } else if (!lastName) {
-        setMissingField("lastname");
-        setError(`Por favor, complete el campo "Last Name".`);
-        return;
+      setMissingField("lastname");
+      setError(`Por favor, complete el campo "Last Name".`);
+      return;
     } else if (!email) {
       setMissingField("correo electrónico");
       setError(`Por favor, complete el campo "correo electrónico".`);
@@ -51,7 +51,7 @@ const RegisterForm = () => {
         email,
         password
       });
-      
+
       navigate('/login?success=Registro+exitoso.+Inicia+sesión+para+probar+el+chat!');
     } catch (error) {
 
@@ -109,31 +109,31 @@ const RegisterForm = () => {
         <div>
           <label htmlFor="password">Password:</label>
           <input
-              type="password"
-              id="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className={
-                (missingField === "contraseña" || (password !== confirmPassword && (missingField === "contraseña" || missingField === "confirmación de contraseña")))
-                  ? "error-input"
-                  : ""
-              }
-            />
+            type="password"
+            id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            className={
+              (missingField === "contraseña" || (password !== confirmPassword && (missingField === "contraseña" || missingField === "confirmación de contraseña")))
+                ? "error-input"
+                : ""
+            }
+          />
         </div>
         <div>
-            <label htmlFor="confirmPassword">Confirm Password:</label>
-            <input
-              type="password"
-              id="confirmPassword"
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
-              className={
-                (missingField === "confirmación de contraseña" || (password !== confirmPassword && (missingField === "contraseña" || missingField === "confirmación de contraseña" || !missingField)))
-                  ? "error-input"
-                  : ""
-              }
-            />
-          </div>
+          <label htmlFor="confirmPassword">Confirm Password:</label>
+          <input
+            type="password"
+            id="confirmPassword"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className={
+              (missingField === "confirmación de contraseña" || (password !== confirmPassword && (missingField === "contraseña" || missingField === "confirmación de contraseña" || !missingField)))
+                ? "error-input"
+                : ""
+            }
+          />
+        </div>
 
         <button type="submit">Register</button>
         <button onClick={() => navigate('/')}>Go to Home</button>

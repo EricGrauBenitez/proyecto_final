@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './UsersPage.css';
+import '../css/UsersPage.css';
 
 const UsersPage = () => {
   const [user, setUser] = useState(null);
   const token = localStorage.getItem('token');
   const userId = localStorage.getItem('userId');
   const [editMode, setEditMode] = useState(false);
-  const [editedData, setEditedData] = useState({}); // Objeto para almacenar los datos editados
-  const [showEditConfirmation, setShowEditConfirmation] = useState(false); // Aviso de confirmación de edición
+  const [editedData, setEditedData] = useState({});
+  const [showEditConfirmation, setShowEditConfirmation] = useState(false);
 
   const navigate = useNavigate();
 
@@ -56,7 +56,6 @@ const UsersPage = () => {
           'x-access-token': token,
         },
       };
-      const updatedUserData = { ...user, ...editedData };
 
       try {
         // Mostrar la confirmación antes de editar
@@ -76,6 +75,7 @@ const UsersPage = () => {
       },
     };
     const updatedUserData = { ...user, ...editedData };
+    delete updatedUserData.password;
 
     try {
       await axios.put(`http://localhost:8000/users/${userId}`, updatedUserData, config);
@@ -161,7 +161,7 @@ const UsersPage = () => {
                   )}
                 </td>
               </tr>
-              
+
               <tr>
                 <td>Role:</td>
                 <td>
@@ -181,32 +181,32 @@ const UsersPage = () => {
             </tbody>
           </table>
           <div>
-        <button
-          className={`button-edit ${editMode ? 'editing' : ''}`}
-          onClick={handleEdit}
-        >
-          {editMode ? 'Guardar' : 'Editar'}
-        </button>
-        {showEditConfirmation && (
-          <div className="edit-warning-text">
-            ¡Atención! ¿Deseas guardar los cambios?
             <button
-              className="button-edit"
-              onClick={confirmEdit}
+              className={`button-edit ${editMode ? 'editing' : ''}`}
+              onClick={handleEdit}
             >
-              Confirmar Guardar
+              {editMode ? 'Guardar' : 'Editar'}
             </button>
-            <button onClick={cancelEdit}>Cancelar</button>
+            {showEditConfirmation && (
+              <div className="edit-warning-text">
+                ¡Atención! ¿Deseas guardar los cambios?
+                <button
+                  className="button-edit"
+                  onClick={confirmEdit}
+                >
+                  Confirmar Guardar
+                </button>
+                <button onClick={cancelEdit}>Cancelar</button>
+              </div>
+            )}
+            <button
+              className={`button-danger ${showEditConfirmation ? 'hidden' : ''}`}
+              onClick={handleDelete}
+            >
+              Eliminar Usuario
+            </button>
           </div>
-        )}
-        <button
-          className={`button-danger ${showEditConfirmation ? 'hidden' : ''}`}
-          onClick={handleDelete}
-        >
-          Eliminar Usuario
-        </button>
-      </div>
-      </div>
+        </div>
       ) : (
         <p>Loading...</p>
       )}
