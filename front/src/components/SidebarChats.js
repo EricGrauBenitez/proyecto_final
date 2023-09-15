@@ -46,10 +46,11 @@ const SidebarChats = ({
 
   return (
     <div className={`sidebar ${showSidebar ? '' : 'hidden'}`}>
-      <button onClick={onCreateNewChat}>Crear nuevo chat</button>
-      <ChatList chats={chats} onSelectChat={onSelectChat} getChatMessages={getChatMessages} />
-      <div className="chat-titles">
-        {/* <ul>
+      <button onClick={onCreateNewChat}> New Chat</button>
+      <div className="sidebar-content">
+        <ChatList chats={chats} onSelectChat={onSelectChat} getChatMessages={getChatMessages} />
+        <div className="chat-titles">
+          {/* <ul>
         {chatTitleArray.map((chatTitle, index) => (
           <li key={index} className="chat-title-item">
             {isEditingTitle === chatTitle.chatId ? (
@@ -84,14 +85,14 @@ const SidebarChats = ({
       </li>
     ))}
     </ul> */}
+        </div>
+        {selectedChat && (
+          <ChatEditor
+            selectedChat={selectedChat}
+            onSaveChat={onSaveChatTitle}
+          />
+        )}
       </div>
-      {/* Agregar el componente ChatEditor */}
-      {selectedChat && (
-        <ChatEditor
-          selectedChat={selectedChat}
-          onSaveChat={onSaveChatTitle}
-        />
-      )}
     </div>
   );
 };

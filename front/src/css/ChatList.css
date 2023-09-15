@@ -5,3 +5,28 @@
     padding: 0;
   }
 }
+.delete-button {
+  background-color: #ad0a0a; 
+  color: white; 
+}
+.delete-final-button {
+  background-color: #056512; 
+  color: white; 
+}
+.cancel-button {
+  background-color: #a30808; 
+  color: white; 
+}
+
+.chat-title-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  transition: background-color 0.3s ease; /* Agrega una transición suave */
+}
+
+.chat-title-item:hover {
+  background-color: #333; 
+  border-radius: 10px;
+}

@@ -11,13 +11,13 @@ router.post('/register', UserController.createUser);
 // Ruta para obtener todos los usuarios (protegida por el token JWT)
 // router.get('/', authMiddleware, UserController.getAllUsers); esto para el admin
 
-router.get('/:id', UserController.getUserById);
+router.get('/:id', authMiddleware, UserController.getUserById);
 
-router.post('/email', UserController.getUserByEmail);
+router.post('/email', authMiddleware, UserController.getUserByEmail);
 
-router.put('/:id', UserController.updateUser);
+router.put('/:id', authMiddleware, UserController.updateUser);
 
-router.delete('/:id', UserController.deleteUser);
+router.delete('/:id', authMiddleware, UserController.deleteUser);
 
 
 

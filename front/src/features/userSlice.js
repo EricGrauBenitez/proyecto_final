@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { Api } from '../services'
 
-const API = new Api(); 
+const API = new Api();
 
 const initialState = {
   userData: null,
@@ -31,17 +31,9 @@ export const userSlice = createSlice({
     },
     logout: (state) => {
       localStorage.clear()
-        return {
-            // window.location.reload()
-            ...state,
-            isLoggedIn: false,
-            userData: null,
-            
-        // } catch (error) {
-        //     console.error(error);
-        //   }
-    }},
-    register: () => {}
+      window.location.reload()
+    },
+    register: () => { }
   },
 })
 

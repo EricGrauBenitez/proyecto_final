@@ -1,17 +1,22 @@
 import React, { useState, useEffect, useMemo } from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { FaEdit } from 'react-icons/fa';
-
-
+import { AiOutlineDelete } from 'react-icons/ai';
 import ChatEditor from "./ChatEditor";
 import axios from 'axios';
 import '../css/ChatList.css';
+import DeleteConfirmation from './DeleteConfirmation';
+import { setConversation, removeChat } from '../features/chatSlice';
 
 const ChatList = ({ onSelectChat, getChatMessages }) => {
   const chats = useSelector(state => state.chat.chats);
+  const dispatch = useDispatch();
   const userId = localStorage.getItem('userId');
+  const chatId = localStorage.getItem('chatId');
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [selectedChat, setSelectedChat] = useState(null);
+  const [deleteConfirmationState, setDeleteConfirmationState] = useState({});
+
 
   const onSaveChat = async (title) => {
     await axios.put(`http://localhost:8000/chat/${userId}/${selectedChat._id}`, {
@@ -22,12 +27,36 @@ const ChatList = ({ onSelectChat, getChatMessages }) => {
     getChatMessages()
   }
 
+  const clearChat = async (chat) => {
+    try {
+      if (!chat) {
+        console.error('El chat es nulo o indefinido');
+        return;
+      }
+      {
+        // Si el usuario confirma la eliminación, realiza la solicitud de eliminación
+        await axios.delete(`http://localhost:8000/chat/${userId}/${chat._id}`, {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
+
+        dispatch(removeChat(chat._id));
+        dispatch(setConversation([]));
+      }
+    } catch (error) {
+      console.error('Error al borrar la conversación:', error);
+    }
+  };
+
   const sortedChats = useMemo(() => chats.slice().sort((a, b) => b.updateAt - a.updateAt, [chats]))
 
   const setChatToEdit = (chat) => {
     setSelectedChat(chat)
     setIsEditingTitle(true)
   }
+
+
   return (
     <div className="chat-list">
       <ul>
@@ -53,6 +82,27 @@ const ChatList = ({ onSelectChat, getChatMessages }) => {
                     >
                       <FaEdit />
                     </button>
+                    <button
+                      className="delete-button"
+                      onClick={() => {
+                        // Abre la confirmación para este chat específico
+                        setDeleteConfirmationState({ ...deleteConfirmationState, [chat._id]: true });
+                      }}
+                    >
+                      <AiOutlineDelete />
+                    </button>
+
+                    {/* Agrega la confirmación de eliminación solo si está abierta para este chat */}
+                    {deleteConfirmationState[chat._id] && (
+                      <DeleteConfirmation
+                        isOpen={deleteConfirmationState[chat._id]}
+                        onCancel={() => {
+                          // Cierra la confirmación para este chat específico
+                          setDeleteConfirmationState({ ...deleteConfirmationState, [chat._id]: false });
+                        }}
+                        onConfirm={() => clearChat(chat)}
+                      />
+                    )}
                   </>
                 )}
               </li>
@@ -61,39 +111,6 @@ const ChatList = ({ onSelectChat, getChatMessages }) => {
       </ul>
     </div>
   )
-
-  // const [chats, setChats] = useState([]);
-  // const [selectedChat, setSelectedChat] = useState(null);
-  // const userId = localStorage.getItem('userId'); 
-  // useEffect(() => {
-  //   const fetchChatTitles = async () => {
-  //     try {
-  //       const response = await axios.get(`http://localhost:8000/chat/titles/${userId}/`);
-  //       const chatTitles = response.data;
-  //       const chatList = Object.keys(chatTitles).map((chatId) => ({
-  //         _id: chatId,
-  //         title: chatTitles[chatId],
-  //       }));
-  //       setChats(chatList);
-  //     } catch (error) {
-  //       console.error('Error al obtener los títulos de los chats:', error);
-  //     }
-  //   };
-
-  //   fetchChatTitles(); // Llamar a la función para obtener los títulos de los chats
-  // }, []);
-  // return (
-  //   <div className="chat-list">
-  //     <ul className="chat-list-items">
-  //       {chats.map((chat) => (
-  //         <li key={chat._id} onClick={() => onSelectChat(chat._id)}>
-  //           <span className="chat-list-bullet">&#8226;</span>
-  //           {chat.title}
-  //         </li>
-  //       ))}
-  //     </ul>
-  //   </div>
-  // );
 };
 
 export default ChatList;

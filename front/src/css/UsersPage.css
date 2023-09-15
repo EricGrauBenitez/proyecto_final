@@ -1,46 +1,63 @@
 .container {
-    background-color: black;
-    color: white; /* Cambiar el color del texto a blanco */
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-    max-width: 600px;
-    margin: 0 auto;
-  }
-  
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-  }
-  
-  .table th,
-  .table td {
-    padding: 8px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-  }
-  
-  .table th {
-    background-color: #333;
-    color: white; /* Cambiar el color del texto en las celdas de encabezado a blanco */
-  }
-  
-  .button-danger {
-    background-color: red;
-    color: white; /* Cambiar el color del texto en el botón de eliminar a blanco */
-    border: none;
-    padding: 5px 10px;
-    margin-top: 10px;
-    cursor: pointer;
-  }
-  
-  .hidden {
-    display: none;
-  }
-  
-  .warning-text {
-    color: red; /* Cambiar el color del texto de advertencia a rojo */
-    margin-top: 10px;
-  }
-  
+  background-color: black;
+  color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  max-width: 800px; /* Aumenta el ancho máximo para mostrar una tabla más grande */
+  margin: 0 auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.table th,
+.table td {
+  padding: 12px; /* Aumenta el espaciado interior de las celdas para una apariencia más espaciosa */
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.table th {
+  background-color: #333;
+  color: white;
+}
+
+/* Cambia el estilo de las celdas de encabezado */
+.table th {
+  background-color: #333;
+  color: white;
+  font-weight: bold; /* Hace que el texto del encabezado sea más audaz */
+  text-transform: uppercase; /* Convierte el texto del encabezado en mayúsculas */
+}
+
+/* Estilo de fila par e impar para mejorar la legibilidad */
+.table tr:nth-child(even) {
+  background-color: #1f1f1f;
+}
+
+/* Cambia el estilo de las celdas de datos */
+.table td {
+  color: #e3e3e3; /* Color del texto en las celdas de datos */
+}
+
+.button-danger {
+  background-color: red;
+  color: white;
+  border: none;
+  padding: 8px 16px; /* Aumenta el espaciado del botón para que sea más fácil hacer clic */
+  margin-top: 10px;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+.warning-text {
+  color: red;
+  margin-top: 10px;
+}

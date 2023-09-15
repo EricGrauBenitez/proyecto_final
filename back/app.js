@@ -22,7 +22,7 @@ app.use(bodyParser.json());
 
 app.use('/users', usersRoutes);
 app.use('/chat', chatRoutes);
-app.use('/login', loginRouter); 
+app.use('/login', loginRouter);
 app.use('/api/v1', chatRoutes);
 app.post('/chat', chatRoutes);
 

@@ -1,11 +1,13 @@
 import { React, useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
 import { useSelector } from 'react-redux';
 import '../css/ChatLayout.css';
+import { RiRobot2Fill } from 'react-icons/ri';
+import { BiUser } from 'react-icons/bi';
+
 
 const ConversationPage = () => {
-    const { chatId } = useParams()
+    const { chatId } = useParams();
     const userId = localStorage.getItem('userId');
 
     const currentChat = useSelector(state => state.chat.currentChat)
@@ -14,17 +16,16 @@ const ConversationPage = () => {
     return (
         <section className="chat-wrapper">
             <div className="chat-messages">
-                {/* Mostrar todas las conversaciones en chatMessages */}
                 <div className="chat-message">
                     {conversation && conversation.map(({ question, answer }, i) => (
                         <div key={i} className="message-bubble">
                             <div className="question message-wrapper">
-                                <p>Human</p>
+                                <p><BiUser /></p>
                                 <p>{question}</p>
                             </div>
                             {answer && (
                                 <div className="answer message-wrapper">
-                                    <p> &#8704 :</p>
+                                    <p> <RiRobot2Fill /> :</p>
                                     <p>{answer}</p>
                                 </div>
                             )}

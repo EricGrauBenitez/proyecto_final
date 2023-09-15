@@ -4,13 +4,12 @@ import '../css/ChatLayout.css';
 import { IoIosSend, IoMdMenu } from 'react-icons/io';
 import { BsLayoutSidebarReverse } from 'react-icons/bs'
 import { AiFillHome, AiOutlineUser } from 'react-icons/ai';
-
-import Logout from '../components/Logout';
 import SidebarChats from '../components/SidebarChats';
-import ConversationPage from '../pages/Conversation';
 import { useNavigate, Outlet, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { setCurrentChat, setConversation, setChats } from '../features/chatSlice';
+
+import { logout } from '../features/userSlice'
 
 const ChatLayout = () => {
   const navigate = useNavigate();
@@ -109,29 +108,14 @@ const ChatLayout = () => {
     }
   };
 
-  const clearChat = async () => {
-    try {
-      await axios.delete(`http://localhost:8000/chat/${userId}/${chatId}`, {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      dispatch(setConversation([]))
-      // localStorage.removeItem('chatId')
-      // setChatId(null)
-
-    } catch (error) {
-      console.error('Error al borrar la conversación:', error);
-    }
-  };
   const getChatMessages = async () => {
     try {
-      const { data } = await axios.get(`http://localhost:8000/chat/${userId}`);
+      const { data } = await axios.get(`http://localhost:8000/chat/${userId}`, {
+        token: localStorage.getItem
+      });
       dispatch(setChats(data));
     } catch (error) {
       console.error('Error al obtener la lista de chats:', error);
-      // Manejar el error, por ejemplo, mostrar un mensaje de error al usuario
     }
   };
 
@@ -164,15 +148,20 @@ const ChatLayout = () => {
             <h1>Chat GPT</h1>
             <Outlet />
             <footer className="chat-footer">
-              <div className='textarea-container'>
-                <textarea type="text" placeholder="Nueva pregunta" value={question} onChange={handleQuestionChange} />
-                <button onClick={sendQuestion}><IoIosSend /></button>
-              </div>
-              <div className="chat-footer-buttons">
-                <button onClick={clearChat}>Borrar Conversación</button>
-                <button onClick={() => navigate('/')}><AiFillHome /></button>
-                <button onClick={() => navigate('/users')}><AiOutlineUser /></button>
-                <Logout />
+              <div className="textarea-container">
+                <div className="textarea-button-container">
+                  <div className="textarea-wrapper">
+                    <textarea
+                      type="text"
+                      placeholder="Send question"
+                      value={question}
+                      onChange={handleQuestionChange}
+                    />
+                    <button className="send-button" onClick={sendQuestion}>
+                      <IoIosSend />
+                    </button>
+                  </div>
+                </div>
               </div>
             </footer>
           </div>

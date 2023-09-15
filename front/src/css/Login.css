@@ -1,0 +1,70 @@
+h1 {
+  color: rgb(5, 5, 5);
+  margin-bottom: 20px; /* Agregamos espacio inferior al título */
+}
+
+.container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column; /* Alineamos los elementos verticalmente */
+  height: 100vh;
+  border: none;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  max-width: 200px;
+  padding: 40px;
+  border: none;
+}
+  
+  label {
+    font-weight: bold;
+    color: aliceblue;
+  }
+
+  .error-input {
+    border: 3px solid rgb(184, 1, 1);
+  }
+
+  .error-message {
+    color: rgb(169, 0, 0);
+  }
+
+  /* Estilo para el mensaje de éxito */
+.success-message {
+  color: green;
+  font-size: 16px; /* Tamaño de fuente personalizado */
+}
+
+.login-button {
+  padding: 10px 40px; /* Ajusta el tamaño del botón */
+  background-color: #12724f; /* Color de fondo */
+  color: #fff; /* Color del texto */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.login-button:hover {
+  background-color: #119c26; /* Cambiar color al pasar el ratón por encima */
+}
+
+.link-button {
+  background: none;
+  border: none;
+  margin: 0;
+  padding: 0;
+  font-size: inherit;
+  color: #4d759e; 
+  cursor: pointer;
+}
+
+.link-button:hover {
+  text-decoration: none;
+  color: #76a8da; 
+}

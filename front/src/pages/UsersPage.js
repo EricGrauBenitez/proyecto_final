@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import DeleteConfirmation from '../components/DeleteConfirmation';
 import '../css/UsersPage.css';
+
 
 const UsersPage = () => {
   const [user, setUser] = useState(null);
@@ -10,6 +12,8 @@ const UsersPage = () => {
   const [editMode, setEditMode] = useState(false);
   const [editedData, setEditedData] = useState({});
   const [showEditConfirmation, setShowEditConfirmation] = useState(false);
+  const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
+
 
   const navigate = useNavigate();
 
@@ -32,8 +36,11 @@ const UsersPage = () => {
         console.error('Error al obtener el usuario:', error);
       });
   };
+  const handleDelete = () => {
+    setShowDeleteConfirmation(true);
+  };
 
-  const handleDelete = async () => {
+  const confirmDelete = async () => {
     const config = {
       headers: {
         'x-access-token': token,
@@ -46,7 +53,15 @@ const UsersPage = () => {
       navigate('/');
     } catch (error) {
       console.error('Error al eliminar el usuario:', error);
+    } finally {
+      setShowDeleteConfirmation(false); // Oculta el componente de confirmación después de eliminar
     }
+  };
+
+
+  const cancelDelete = () => {
+    console.log(setShowDeleteConfirmation);
+    setShowDeleteConfirmation(false);
   };
 
   const handleEdit = async () => {
@@ -89,14 +104,14 @@ const UsersPage = () => {
   };
 
   const cancelEdit = () => {
-    setEditMode(false); // Desactivar el modo de edición
-    setEditedData({}); // Restablecer los datos editados
-    setShowEditConfirmation(false); // Ocultar aviso de confirmación
+    setEditMode(false);
+    setEditedData({});
+    setShowEditConfirmation(false);
   };
 
   return (
     <div className="container">
-      <h1>{user ? `${user.name} ${user.lastName}` : 'Loading...'}</h1>
+      <h1>{user ? `${user.name} ${user.lastName}` : 'Try again'}</h1>
       {user ? (
         <div>
           <table className="table">
@@ -203,13 +218,18 @@ const UsersPage = () => {
               className={`button-danger ${showEditConfirmation ? 'hidden' : ''}`}
               onClick={handleDelete}
             >
-              Eliminar Usuario
+              Delete Account?
             </button>
           </div>
         </div>
       ) : (
-        <p>Loading...</p>
+        <p>Sentimos las molestias</p>
       )}
+      <DeleteConfirmation
+        isOpen={showDeleteConfirmation}
+        onCancel={cancelDelete}
+        onConfirm={confirmDelete}
+      />
     </div>
   );
 };

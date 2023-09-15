@@ -1,0 +1,21 @@
+.navbar {
+    display: flex;
+    justify-content: flex-end; /* Alinea los botones a la derecha */
+    gap: 10px; /* Espacio entre los botones */
+    align-items: flex-start; /* Centra verticalmente los elementos */
+    margin-right: 10px; /* Añade margen derecho para separar del borde derecho */
+
+  }
+  
+  .navbar-buttons button {
+    background-color: transparent; /* Elimina el fondo del botón */
+    border: none; /* Elimina el borde del botón */
+    color: #cacdcf; /* Color de texto */
+    font-size: 30px; /* Tamaño de fuente */
+    cursor: pointer;
+  }
+  
+  .navbar-buttons button:hover {
+    color: #0056b3; /* Color de texto al pasar el ratón por encima */
+  }
+  

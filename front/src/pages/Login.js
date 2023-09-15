@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { login } from '../features/userSlice'
+import { useAuth } from '../components/AuthContext';
 import { useNavigate, useLocation } from 'react-router-dom';
 import axios from 'axios';
-import '../css/RegisterForm.css';
+import '../css/Login.css';
 
 const Login = () => {
+  const { isLoggedIn, login } = useAuth();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
@@ -30,6 +31,8 @@ const Login = () => {
         localStorage.setItem('userId', response.data.userId);
         localStorage.setItem('chatId', response.data.chatId);
 
+        login();
+
         navigate('/chat');
       } else {
         console.error('Error al iniciar sesión', response.status);
@@ -48,7 +51,7 @@ const Login = () => {
   return (
 
     <div className="container">
-      <h2>Iniciar sesión</h2>
+      <h1>Login</h1>
       <form onSubmit={handleSubmit}>
         {successMessage && <div className="success-message success">{successMessage}</div>}
         {error && <div className="error-message error">{error}</div>}
@@ -68,12 +71,15 @@ const Login = () => {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required />
-        </div>
-        <button type="submit">Iniciar sesión</button>
-        <button onClick={() => navigate('/')}>Go to Home</button>
-        <button onClick={() => navigate('/forgot-password')}>Forgot Password?</button>
-        <button onClick={() => navigate('/register')}>Registro</button>
+          <button className='link-button' onClick={() => navigate('/forgot-password')}>Forgot Password?</button>
 
+        </div>
+        <div className="space-between-input-button">
+          <button type="submit" className="login-button">Login</button>
+        </div>
+        <span>Don't have an account?
+          <button className='link-button' onClick={() => navigate('/register')}>Sign up</button>
+        </span>
       </form>
     </div>
   );

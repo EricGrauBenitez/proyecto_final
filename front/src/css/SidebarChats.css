@@ -16,6 +16,10 @@
   width: 0; /* Ancho 0 cuando está oculto */
   overflow: hidden;
 }
+.sidebar-content {
+  max-height: 90vh; /* Altura máxima del contenido del sidebar */
+  overflow-y: auto; /* Habilita el scroll vertical si el contenido excede la altura máxima */
+}
 
 /* Estilo para el botón "Toggle Sidebar" en el rincón superior izquierdo de la página */
 .toggle-sidebar-button {

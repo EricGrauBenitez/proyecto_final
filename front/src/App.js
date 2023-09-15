@@ -7,56 +7,53 @@ import UsersPage from './pages/UsersPage';
 import ForgotPassword from './pages/ForgotPassword';
 import RegisterForm from './pages/RegisterForm';
 import PrivateRoute from './components/PrivateRoute';
+import { AuthProvider } from './components/AuthContext';
 import { useSelector } from 'react-redux';
-import './css/Home.css';
+import './css/Navbar.css';
 import Home from './pages/Home';
 import ConversationPage from './pages/Conversation';
+import Navbar from './components/Navbar'; // Importa el componente de navegación
 
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const token = localStorage.getItem('token');
-    if (token) {
-      setIsLoggedIn(true);
-      console.log('Usuario autenticado.'); // Agrega un console.log aquí
-
-    } else {
-      setIsLoggedIn(false);
-      console.log('Usuario no autenticado.'); // Agrega un console.log aquí
-
-    }
-  }, []);
 
   return (
     <Router>
-      <div className="App">
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<RegisterForm />} />
-          <Route path="/forgot-password" element={<ForgotPassword />} />
-          <Route
-            path="/chat"
-            element={<ChatLayout />}>
+      <AuthProvider>
+        <div className="App">
+          <Navbar />
+
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/register" element={<RegisterForm />} />
+            <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route
-              path=":chatId"
+              path="/chat"
               element={
-                <ConversationPage />
+                <PrivateRoute>
+                  <ChatLayout />
+                </PrivateRoute>}>
+              <Route
+                path=":chatId"
+                element={
+                  <PrivateRoute>
+                    <ConversationPage />
+                  </PrivateRoute>
+                }
+              />
+            </Route>
+            <Route
+              path="/users"
+              element={
+                <PrivateRoute>
+                  <UsersPage />
+                </PrivateRoute>
               }
             />
-          </Route>
-          <Route
-            path="/users"
-            element={
-              <PrivateRoute isLoggedIn={isLoggedIn}>
-                <UsersPage />
-              </PrivateRoute>
-            }
-          />
-        </Routes>
-      </div>
+          </Routes>
+        </div>
+      </AuthProvider>
     </Router>
   );
 }

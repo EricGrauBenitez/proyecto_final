@@ -10,9 +10,9 @@ const Logout = () => {
   const handleLogout = async () => {
     try {
       dispatch(logout());
-      localStorage.removeItem('userId'); 
-      localStorage.removeItem('chatId'); 
-      navigate('/login'); 
+      localStorage.removeItem('userId');
+      localStorage.removeItem('chatId');
+      navigate('/login');
     } catch (error) {
       console.error('Error al cerrar sesión', error);
     }

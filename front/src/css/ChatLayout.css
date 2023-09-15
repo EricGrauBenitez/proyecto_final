@@ -10,11 +10,11 @@ body {
 .container {
   position: relative;
   margin: 0 auto;
-  border: 1px solid #ccc;
+  border: none;
   border-radius: 8px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
   width: 100vw;
-  max-height: 75vh;
+  max-height: 80vh;
 }
 
 /* Estilo para el encabezado del chat */
@@ -31,14 +31,15 @@ h1 {
   margin-bottom: 50px;
 }
 
-
 .chat-message {
   display: flex;
   flex-direction: column;
+  width: 100%; 
+  margin: 0 auto; 
 }
 
 .message-wrapper {
-  padding: 10px; /* Aumentar espaciado */
+  padding: 5px; /* Aumentar espaciado */
   width: 100%;
 }
 
@@ -48,7 +49,7 @@ h1 {
   color: #000000; /* Color del texto para las preguntas */
   border-radius: 20px 20px 0 20px; /* Ajustar bordes para hacerlo más redondito */
   margin-left: auto; /* Alinear a la izquierda */
-  background-color: #863333;
+  background-color: #515151;
   align-self: flex-end;
   width: 100%;
 }
@@ -59,7 +60,7 @@ h1 {
   color: #fff; /* Color del texto para las respuestas */
   border-radius: 20px 20px 20px 0; /* Ajustar bordes para hacerlo más redondito */
   margin-right: auto; 
-  background-color: #28415d;
+  background-color: #010811;
   align-self: flex-start;
 }
 
@@ -97,18 +98,18 @@ button {
 }
 
 /* Estilo para los bocadillos de mensaje */
- .message-bubble {
+.message-bubble {
   padding: 8px;
-  border-radius: 20px; 
-   margin: 5px;
+  border-radius: 20px;
+  margin: 5px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  width: auto;
-} 
+  width: 80%; /* Ajusta el ancho de los mensajes según tu preferencia */
+}
 .chat-wrapper {
   position: relative;
-  max-height: calc(100vh - 200px);
+  max-height: calc(100vh - 180px);
   overflow-y: auto;
 }
 .chat-footer {
@@ -126,11 +127,13 @@ button {
   border-radius: 0px 0px 8px 8px;
 
   & textarea {
-    color: #212121;
+    color: #e3e3e3;
+    background-color: #2c3034;
+    border: none;
     padding: 15px;
     margin: 10px;
     width: 90%;
-    height: 50px;
+    height: 20px;
   }
 }
 
@@ -144,30 +147,54 @@ button {
   display: flex;
   width: 100vw;
 }
+.chat-footer {
+  padding-block: 2px; /* Ajusta el valor del padding según tu preferencia */
+}
+
 
 .textarea-container {
   position: relative;
-  display: flex; /* Use flex to control the button placement */
-  align-items: center; /* Vertically center items within the container */
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.textarea-container textarea {
-  flex: 1; /* Let the textarea grow to fill available space */
+.textarea-button-container {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  position: relative; /* Añadimos posición relativa */
+}
+
+.textarea-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end; /* Alinea el contenido al final del div */
+  width: 100%;
+  position: relative;
+}
+
+
+.textarea-wrapper textarea {
+  flex-grow: 1; /* Hace que el textarea ocupe todo el espacio disponible */
   padding: 15px;
   margin: 10px;
-  width: 90%;
-  height: 50px;
-}
-
-.textarea-container button {
-  padding: 8px 15px;
   border: none;
   border-radius: 5px;
-  background-color: #6e89a5;
-  color: #fff;
-  cursor: pointer;
-  margin-left: 10px; /* Add margin to the button to separate it from the textarea */
+  background-color: #2c3034;
+  color: #e3e3e3;
+  width: 100%;
 }
+
+.textarea-wrapper button.send-button {
+  background-color: #09803e;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 15px;
+  cursor: pointer;
+}
+
 
 .toggle-sidebar-container {
   display: flex;
@@ -178,19 +205,20 @@ button {
 /* Estilo para el botón "Toggle Sidebar" y "Hide Sidebar" */
 .toggle-sidebar-button {
   padding: 10px;
-  background-color: #007bff;
-  color: #fff;
+  background-color: #2c3034;
+  color: #383636;
   border: none;
   cursor: pointer;
   position: fixed;
   top: 10px;
-  left: 10px; /* Posición en la esquina superior izquierda */
-  z-index: 2; /* Coloca los botones por encima del contenido */
+  left: 10px; 
+  z-index: 2; 
   transition: left 0.3s ease; /* Efecto de transición para el cambio de posición */
 }
 
 /* Estilo para mover el botón "Toggle Sidebar" hacia la derecha cuando el sidebar está visible */
 .toggle-sidebar-button.move-right {
-  left: 170px; /* Ajusta la posición cuando el sidebar esté visible */
-}
+  left: 170px; 
+  background-color: #2c3034;
 
+}
