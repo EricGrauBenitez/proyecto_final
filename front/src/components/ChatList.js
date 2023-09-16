@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { FaEdit } from 'react-icons/fa';
+import { FaEdit, FaCheck } from 'react-icons/fa';
 import { AiOutlineDelete } from 'react-icons/ai';
 import ChatEditor from "./ChatEditor";
 import axios from 'axios';

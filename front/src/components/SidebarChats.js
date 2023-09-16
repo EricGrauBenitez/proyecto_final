@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import ChatList from './ChatList';
 import ChatEditor from './ChatEditor';
 import '../css/SidebarChats.css';
+import { AiOutlinePlus } from 'react-icons/ai';
 
 const SidebarChats = ({
   showSidebar,
@@ -46,7 +47,7 @@ const SidebarChats = ({
 
   return (
     <div className={`sidebar ${showSidebar ? '' : 'hidden'}`}>
-      <button onClick={onCreateNewChat}> New Chat</button>
+      <button className='create-chat-button' onClick={onCreateNewChat}> <AiOutlinePlus /> New Chat</button>
       <div className="sidebar-content">
         <ChatList chats={chats} onSelectChat={onSelectChat} getChatMessages={getChatMessages} />
         <div className="chat-titles">

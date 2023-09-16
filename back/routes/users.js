@@ -13,9 +13,9 @@ router.post('/register', UserController.createUser);
 
 router.get('/:id', authMiddleware, UserController.getUserById);
 
-router.post('/email', authMiddleware, UserController.getUserByEmail);
+router.post('/email', UserController.getUserByEmail);
 
-router.put('/:id', authMiddleware, UserController.updateUser);
+router.put('/:id', UserController.updateUser);
 
 router.delete('/:id', authMiddleware, UserController.deleteUser);
 

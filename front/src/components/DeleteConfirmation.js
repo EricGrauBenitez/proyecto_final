@@ -1,7 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { AiOutlineDelete } from 'react-icons/ai';
-import { FaTimes } from 'react-icons/fa';
+import { FaTimes, FaCheck } from 'react-icons/fa';
 import '../css/ChatList.css';
 
 const DeleteConfirmation = ({ isOpen, onCancel, onConfirm }) => {
@@ -13,7 +12,7 @@ const DeleteConfirmation = ({ isOpen, onCancel, onConfirm }) => {
         <div className="delete-confirmation">
             <p>Delete this?</p>
             <button className="delete-final-button" onClick={onConfirm}>
-                <AiOutlineDelete />
+                <FaCheck />
             </button>
             <button className="cancel-button" onClick={onCancel}>
                 <FaTimes />

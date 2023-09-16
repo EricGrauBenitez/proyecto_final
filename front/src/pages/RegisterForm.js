@@ -17,10 +17,21 @@ const RegisterForm = () => {
   });
   const [error, setError] = useState(null);
   const [missingField, setMissingField] = useState(null); // Estado para rastrear el campo faltante
+  const [allRequiredFieldsComplete, setAllRequiredFieldsComplete] = useState(false); // Nuevo estado para rastrear campos obligatorios
+
   const navigate = useNavigate();
 
   const handleNextStep = () => {
+
+    if (step === 1 && (!formData.name || !formData.lastName)) {
+      setMissingField('name');
+      setError('Por favor, complete los campos obligatorios.');
+      return;
+    }
+
     setStep(step + 1);
+    setError(null);
+    setMissingField(null);
   };
 
   const handlePrevStep = () => {
@@ -107,6 +118,7 @@ const RegisterForm = () => {
       {error && <p className="error-message">{error}</p>}
       <form onSubmit={handleSubmit}>
         <div>
+          <h4 className="required-fields">Los campos con * son obligatorios.</h4>
           {step === 1 && (
             <>
               <label htmlFor="name">Name *</label>

@@ -65,8 +65,21 @@
   cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
 }
 
-/* Estilos para el botón "Guardar" en SidebarChats cuando se edita el título */
 .save-button {
   margin-left: 10px; /* Espacio a la izquierda del botón */
   cursor: pointer; /* Cambia el cursor al pasar sobre el botón */
+}
+
+.create-chat-button {
+  border: 1px solid #ccc; /* Borde gris */
+  padding: 10px 20px; /* Espacio interno */
+  background-color: transparent; /* Fondo transparente */
+  cursor: pointer; /* Cambiar el cursor al pasar por encima */
+
+  /* Estilo de hover */
+  transition: background-color 0.3s ease;
+}
+
+.create-chat-button:hover {
+  background-color: #342e2e; /* Cambia el fondo al pasar por encima */
 }

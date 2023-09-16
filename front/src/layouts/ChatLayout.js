@@ -43,6 +43,7 @@ const ChatLayout = () => {
     // Obtener la conversación inicial al cargar el componente
     getChatMessages();
   }, []);
+
   const handleQuestionChange = (e) => {
     setQuestion(e.target.value);
   };

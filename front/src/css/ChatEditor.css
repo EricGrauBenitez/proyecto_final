@@ -3,3 +3,11 @@
     gap: 1px;
     width: 100%;
 }
+
+.button-confirm-edit {
+    background-color: #056512;
+  }
+
+  .button-cancel-edit {
+    background-color: rgb(181, 0, 0);
+  }

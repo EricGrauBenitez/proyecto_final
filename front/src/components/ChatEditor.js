@@ -22,8 +22,16 @@ const ChatEditor = ({ title, selectedChat, onSaveChat, onCloseEditor }) => {
         value={titleToEdit}
         onChange={handleTitleChange}
       />
-      <button onClick={saveEditedChat}><FaCheck /></button>
-      <button onClick={onCloseEditor}><FaTimes /></button>
+      <button
+        className='button-confirm-edit'
+        onClick={saveEditedChat}>
+        <FaCheck />
+      </button>
+      <button
+        className='button-cancel-edit'
+        onClick={onCloseEditor}>
+        <FaTimes />
+      </button>
     </div>
   );
 };

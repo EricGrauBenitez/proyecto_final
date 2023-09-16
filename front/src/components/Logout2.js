@@ -1,5 +1,6 @@
 import React from 'react';
 import { useAuth } from './AuthContext';
+import { AiOutlineLogout } from 'react-icons/ai'
 
 function Logout2() {
     const { logout } = useAuth();
@@ -9,7 +10,7 @@ function Logout2() {
     };
 
     return (
-        <button onClick={handleLogout}>Logout</button>
+        <button onClick={handleLogout}><AiOutlineLogout /></button>
     );
 }
 

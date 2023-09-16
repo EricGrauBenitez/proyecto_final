@@ -3,6 +3,9 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import DeleteConfirmation from '../components/DeleteConfirmation';
 import '../css/UsersPage.css';
+import { FaTimes, FaCheck } from 'react-icons/fa';
+import { AiOutlineDelete } from 'react-icons/ai';
+
 
 
 const UsersPage = () => {
@@ -206,12 +209,16 @@ const UsersPage = () => {
               <div className="edit-warning-text">
                 ¡Atención! ¿Deseas guardar los cambios?
                 <button
-                  className="button-edit"
+                  className="button-confirm-edit"
                   onClick={confirmEdit}
                 >
-                  Confirmar Guardar
+                  <FaCheck />
                 </button>
-                <button onClick={cancelEdit}>Cancelar</button>
+                <button
+                  className='button-danger'
+                  onClick={cancelEdit}>
+                  <FaTimes />
+                </button>
               </div>
             )}
             <button
