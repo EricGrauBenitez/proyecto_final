@@ -1,131 +1,60 @@
-Para activar el backend:
+Hola Mundo! Soy Eric Grau y este es mi proyecto final del curso Full Stack web development de la escuela IT Codespace. He decidido crear un chat con la IA de ChatGPT, ya que durante el curso explotó su funcionalidad y el mundo está cambiando gracias a él. Debido a esto, hay que saber entender cómo aplicarla .
 
-cd back
-npm install
+GET START
 
-USUARIOS
+1. Requirements
+   Asegúrate de tener una herramienta de edición de texto y código como Visual Studio Code e instalar el NPM y que funcione.
 
-diferentes rutas:
+2. Install
+   Node.js
 
-http://localhost:8000/login POST
+- Para poder descargar Node.js desde la terminal BASH:
+  sudo npm install -g n
+  sudo n latest
 
-http://localhost:8000/users/register POST Para registro de usuarios
-Por ejemplo:
-{
-"name": "Nombre del Usuario",
-"lastName": "Apellido del Usuario",
-"city": "Ciudad (opcional)",
-"country": "País (opcional)",
-"email": "correo@ejemplo.com",
-"password": "contraseña_segura",
-"chats": [
-{
-"\_id": "ID_DEL_CHAT_1",
-"conversation": [],
-"title": "Título del Chat 1",
-"createdAt": 1631295667000
-},
-{
-"\_id": "ID_DEL_CHAT_2",
-"conversation": [],
-"title": "Título del Chat 2",
-"createdAt": 1631295668000
-}
-]
-}
+- Revisa la versión de node con:
+  node -v
 
-Para autenticación JWT:
--POST a http://localhost:8000/login
--Recibirás un token
--GET a http://localhost:8000/users insertando el token recibido anteriormente en el auth.
-
-Una vez autenticado:
--Para borrar un usuario: DELETE a http://localhost:8000/users/{userId}
--Para encontrarlo: GET a http://localhost:8000/users/{userId}
--Para actualizar alguno de sus parámetros: PUT a http://localhost:8000/users/{userId}
+3. Clona el repositorio
 
 ---
 
-CHAT
+- En tu directorio:
+  npm install
 
-POST a http://localhost:8000/chat/:userId/
-con estructura JSON:
-{
-"conversation": [
-{
-"question": "Primera pregunta",
-"answer": "Primera respuesta"
-}
-],
-"title": "Título del Nuevo Chat"
-}
+EXPLICACIÓN DEL BACK-END
+Escogí NodeJs y MongoDb porque comparten el mismo lenguaje de programación y son muy versátiles. Además, el sistema de la base de datos no era muy compleja y se puede gestionar fácilmente con estas tecnologías.
 
--Para conseguir un chat de un usuario: GET a http://localhost:8000/chat/:userId/:chatId
--Para borrar un chat de un usuario: DELETE a http://localhost:8000/chat/:userId/:chatId
--Para actualizarlo: PUT a http://localhost:8000/chat/:userId/:chatId
-{
-"conversation":
-[{"question":"hola",
-"answer":"bien"}]
-}
+1. User
+   Ejemplo de user:
+   {
+   "name": "Nombre del Usuario",
+   "lastName": "Apellido del Usuario",
+   "city": "Ciudad (opcional)",
+   "country": "País (opcional)",
+   "email": "correo@ejemplo.com",
+   "password": "contraseña_segura",
+   "chats": [
+   {
+   "\_id": "ID_DEL_CHAT_1",
+   "conversation": [],
+   "title": "Título del Chat 1",
+   "createdAt": 1631295667000
+   }]}
 
-SOBRE TITLES:
+   Tabla con los endpoints de user:
+   URL TYPE DESCRIPTION
+   http://localhost:8000/users/:id GET get user data by id
+   http://localhost:8000/users/register POST create of an user
+   http://localhost:8000/users/email POST change with the email (forgot the password)
+   http://localhost:8000/users/:id PUT update an user by id
+   http://localhost:8000/users/:id DELETE delete an user by id
+   http://localhost:8000/login POST create a token for the auth
 
--Para editar un title:
-http://localhost:8000/chat/:chatId/title
-con JSON
-{
-"title":"Gran pollo"
-}
-
--Para recoger todos los títulos de chats de un usuario:
-GET a http://localhost:8000/chat/titles/:userId
-
--Para recoger un título de un chat:
-GET a http://localhost:8000/chat/:chatId/title
-
----
-
-PARA LA CONTRASEÑA OLVIDADA
-Paso 1: Enviar una solicitud de recuperación de contraseña
-
-POST http://localhost:puerto/forgot-password
-
-{
-"email": "correo@example.com"
-}
-
-Paso 2: Verifica la base de datos
-
-Verifica que el token de recuperación de contraseña se ha almacenado correctamente en tu base de datos. Puedes hacerlo consultando tu base de datos o utilizando una herramienta de administración de bases de datos como MongoDB Compass si estás utilizando MongoDB.
-
-Paso 3: Simula el proceso de restablecimiento de contraseña
-
-Crea una nueva solicitud en Thunder Client para simular el proceso de restablecimiento de contraseña. Configura la solicitud para acceder a la página de restablecimiento de contraseña utilizando el token en la URL. Por ejemplo:
-bash
-Copy code
-GET http://localhost:puerto/reset-password/elTokenAqui
-Ejecuta la solicitud. Deberías recibir una respuesta del servidor que confirma si el token es válido o ha expirado.
-Paso 4: Verifica la página de restablecimiento de contraseña
-
-Si la solicitud en el paso anterior confirmó que el token es válido, puedes verificar que la página de restablecimiento de contraseña se muestra correctamente en tu aplicación React.
-
-Paso 5: Simula el restablecimiento de contraseña
-
-Crea una nueva solicitud en Thunder Client para simular el restablecimiento de contraseña real. Configura la solicitud para enviar una solicitud POST al servidor con la nueva contraseña del usuario. Por ejemplo:
-bash
-Copy code
-POST http://localhost:puerto/reset-password/elTokenAqui
-En el cuerpo de la solicitud, agrega la nueva contraseña del usuario en formato JSON:
-
-json
-Copy code
-{
-"password": "nueva_contraseña_aqui"
-}
-Ejecuta la solicitud. Deberías recibir una respuesta del servidor indicando que la contraseña se ha restablecido con éxito.
-Paso 6: Verifica el acceso con la nueva contraseña
-
-Asegúrate de que ahora puedas iniciar sesión en tu aplicación utilizando la nueva contraseña que estableciste en el paso anterior. Puedes hacerlo manualmente iniciando sesión en tu aplicación con el correo electrónico y la nueva contraseña.
-
-Siguiendo estos pasos, podrás probar y verificar el flujo completo de recuperación de contraseña en tu aplicación, desde el envío del correo electrónico de recuperación hasta el restablecimiento de la contraseña y la comprobación de que la nueva contraseña funcione para iniciar sesión. Esto te ayudará a garantizar que tu funcionalidad de recuperación de contraseña esté funcionando correctamente tanto en el backend como en el frontend.
+   Tabla con los endpoint relacionado con los chats:
+   URL TYPE DESCRIPTION
+   http://localhost:8000/chat/:userId/:chatId GET get user chat by id
+   http://localhost:8000/chat/:userId/ POST create a chat
+   http://localhost:8000/chat/:userId/:chatId
+   http://localhost:8000/chat/conversation/:userId/:chatId PUT clean a conversation
+   http://localhost:8000/chat/:userId/:chatId DELETE delete a chat by id

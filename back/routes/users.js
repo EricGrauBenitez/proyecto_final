@@ -9,7 +9,7 @@ require('dotenv').config();
 router.post('/register', UserController.createUser);
 
 // Ruta para obtener todos los usuarios (protegida por el token JWT)
-// router.get('/', authMiddleware, UserController.getAllUsers); esto para el admin
+router.get('/admin', authMiddleware, UserController.getAllUsers);
 
 router.get('/:id', authMiddleware, UserController.getUserById);
 
